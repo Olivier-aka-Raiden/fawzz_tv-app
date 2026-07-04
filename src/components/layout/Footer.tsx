@@ -19,7 +19,7 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto px-4 text-center text-gray-500 text-sm space-y-5">
         {/* Brand */}
         <Link to="/" className="inline-block">
-          <span className="brand-text-hover text-lg">
+          <span className="brand-text text-lg">
             FAWZZ_TV
           </span>
         </Link>

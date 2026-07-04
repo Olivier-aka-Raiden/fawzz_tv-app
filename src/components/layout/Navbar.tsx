@@ -32,7 +32,7 @@ export default function Navbar() {
             alt="FAWZZ_TV"
             className="h-8 w-auto"
           />
-          <span className="brand-text-hover text-sm sm:text-base whitespace-nowrap">
+          <span className="brand-text text-sm sm:text-base whitespace-nowrap">
             FAWZZ_TV
           </span>
         </Link>

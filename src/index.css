@@ -42,60 +42,38 @@
   50%      { box-shadow: 0 0 12px rgba(239, 68, 68, 1), 0 0 24px rgba(239, 68, 68, 0.6); }
 }
 
-/* Brand text — Orbitron font with metallic shine animation */
-@utility brand-text {
+/* Brand text — Orbitron font with high-contrast metallic gradient + shine on hover */
+.brand-text {
   font-family: var(--font-brand);
   font-weight: 900;
   letter-spacing: 0.05em;
   text-transform: uppercase;
+  /* High-contrast metallic gradient: dark gunmetal → bright white peak → dark gunmetal */
   background: linear-gradient(
     135deg,
-    #c0c0c0 0%,
-    #e8e8e8 20%,
-    #ffffff 40%,
-    #a8a8a8 60%,
-    #d4d4d4 80%,
-    #c0c0c0 100%
+    #6b7280 0%,
+    #9ca3af 20%,
+    #d1d5db 35%,
+    #ffffff 45%,
+    #f3f4f6 50%,
+    #9ca3af 70%,
+    #6b7280 100%
   );
-  background-size: 200% auto;
+  background-size: 300% auto;
   background-clip: text;
   -webkit-background-clip: text;
   color: transparent;
   -webkit-text-fill-color: transparent;
-  animation: metallic-shine 3s linear infinite;
+  /* Base glow so it's visible even when not hovering */
+  filter: drop-shadow(0 0 8px rgba(145, 70, 255, 0.3));
+  /* Start with highlight off-screen, sweep in on hover */
+  background-position: 100% center;
+  transition: background-position 0.6s ease;
 }
 
-@keyframes metallic-shine {
-  0%   { background-position: 200% center; }
-  100% { background-position: 0% center; }
-}
-
-/* Brand text — paused by default, shines on hover (used as a regular class) */
-.brand-text-hover {
-  font-family: var(--font-brand);
-  font-weight: 900;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  background: linear-gradient(
-    135deg,
-    #c0c0c0 0%,
-    #e8e8e8 20%,
-    #ffffff 40%,
-    #a8a8a8 60%,
-    #d4d4d4 80%,
-    #c0c0c0 100%
-  );
-  background-size: 200% auto;
-  background-clip: text;
-  -webkit-background-clip: text;
-  color: transparent;
-  -webkit-text-fill-color: transparent;
-  background-position: 200% center;
-  transition: background-position 0.4s ease;
-}
-
-.brand-text-hover:hover {
+.brand-text:hover {
   background-position: 0% center;
+  filter: drop-shadow(0 0 14px rgba(145, 70, 255, 0.5));
 }
 
 body {

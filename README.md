@@ -18,10 +18,19 @@ Website for [Fawzz_tv](https://twitch.tv/fawzz_tv) — a French Twitch channel b
 
 ```bash
 npm install
-npm run dev        # http://localhost:5173
-npm run build      # production build → dist/
-npm run preview    # preview production build
+cp .env.example .env   # then fill in your keys
+npm run dev             # http://localhost:5173
+npm run build           # production build → dist/
+npm run preview         # preview production build
 ```
+
+## Environment Variables
+
+| Variable | Required | Description |
+|----------|----------|-------------|
+| `VITE_MAPBOX_TOKEN` | Yes | Mapbox public token (maps won't render without) |
+| `VITE_TWITCH_CLIENT_ID` | For clips | Twitch App client ID from [dev.twitch.tv](https://dev.twitch.tv/console/apps) |
+| `VITE_TWITCH_CLIENT_SECRET` | For clips | Twitch App client secret — clips fall back to static data if missing |
 
 ## Pages
 

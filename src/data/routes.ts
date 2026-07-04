@@ -92,6 +92,7 @@ export const ROUTES: RouteData[] = [
             [7.2661, 43.7031],   // Nice
             [8.9463, 44.4056],   // Genoa
             [10.4017, 43.7228],  // Pisa
+            [11.7969, 42.0924],  // Civitavecchia
             [12.4964, 41.9028],  // Rome
             [14.2681, 40.8518],  // Naples
             [13.3615, 38.1157],  // Palermo

@@ -28,9 +28,14 @@
     "subtitle": "Trois traversées à vélo streamées en direct sur Twitch. De la première épopée nationale au format SubaBike international, chaque aventure repousse les limites du direct communautaire.",
     "back": "Retour aux aventures",
     "notFound": "Aventure introuvable.",
+    "dates": "Dates",
     "story": "Le récit",
+    "highlights": "Temps forts",
+    "route": "Itinéraire",
     "relatedClips": "Clips liés",
     "relatedClipsComing": "Les clips de cette aventure seront disponibles prochainement.",
+    "timeline": "Chronologie",
+    "timelineSub": "L'évolution des aventures SubaBike",
     "cards": {
       "2022": {
         "title": "Sochaux → Nice",

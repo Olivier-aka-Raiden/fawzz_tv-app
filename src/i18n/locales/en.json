@@ -28,9 +28,14 @@
     "subtitle": "Three cycling journeys streamed live on Twitch. From the first national epic to the international SubaBike format, each adventure pushes the boundaries of community-driven live content.",
     "back": "Back to adventures",
     "notFound": "Adventure not found.",
+    "dates": "Dates",
     "story": "The Story",
+    "highlights": "Highlights",
+    "route": "Route",
     "relatedClips": "Related Clips",
     "relatedClipsComing": "Clips from this adventure will be available soon.",
+    "timeline": "Timeline",
+    "timelineSub": "The evolution of SubaBike adventures",
     "cards": {
       "2022": {
         "title": "Sochaux → Nice",

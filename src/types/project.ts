@@ -5,4 +5,7 @@ export interface Project {
   description: string;
   stats: { label: string; value: string }[];
   badge?: string;
+  dates?: { start: string; end: string };
+  routeId?: string;
+  highlights?: string[];
 }

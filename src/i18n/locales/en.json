@@ -64,7 +64,10 @@
   "live": {
     "title": "Live",
     "subtitle": "Join the live stream on Twitch.",
-    "cta": "Open on Twitch"
+    "cta": "Open on Twitch",
+    "chat": "Chat",
+    "liveNow": "Live now",
+    "offline": "Offline"
   },
   "sponsors": {
     "title": "Sponsors",

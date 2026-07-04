@@ -2,17 +2,19 @@ import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Menu, X } from 'lucide-react';
+import { useTwitchLive } from '../../hooks/useTwitchLive';
 
 export default function Navbar() {
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const location = useLocation();
+  const isLive = useTwitchLive();
 
   const NAV_LINKS = [
     { to: '/', label: t('nav.home') },
     { to: '/aventures', label: t('nav.adventures') },
     { to: '/clips', label: t('nav.clips') },
-    { to: '/live', label: t('nav.live') },
+    { to: '/live', label: t('nav.live'), liveIndicator: true },
     { to: '/sponsors', label: t('nav.sponsors') },
     { to: '/a-propos', label: t('nav.about') },
   ];
@@ -30,13 +32,25 @@ export default function Navbar() {
             <Link
               key={link.to}
               to={link.to}
-              className={`text-sm transition-colors ${
+              className={`text-sm transition-colors flex items-center gap-1.5 ${
                 location.pathname === link.to
                   ? 'text-twitch font-medium'
                   : 'text-gray-400 hover:text-white'
               }`}
             >
               {link.label}
+              {link.liveIndicator && (
+                <span
+                  className={`
+                    inline-block w-2 h-2 rounded-full transition-all duration-500
+                    ${isLive
+                      ? 'bg-red-500 neon-live-dot'
+                      : 'bg-gray-700'
+                    }
+                  `}
+                  title={isLive ? 'En direct' : 'Hors ligne'}
+                />
+              )}
             </Link>
           ))}
         </div>
@@ -59,13 +73,24 @@ export default function Navbar() {
               key={link.to}
               to={link.to}
               onClick={() => setOpen(false)}
-              className={`block text-sm py-3 px-2 rounded-lg transition-colors ${
+              className={`block text-sm py-3 px-2 rounded-lg transition-colors flex items-center gap-2 ${
                 location.pathname === link.to
                   ? 'text-twitch bg-twitch/10 font-medium'
                   : 'text-gray-400 hover:text-white hover:bg-gray-800'
               }`}
             >
               {link.label}
+              {link.liveIndicator && (
+                <span
+                  className={`
+                    inline-block w-2 h-2 rounded-full transition-all duration-500
+                    ${isLive
+                      ? 'bg-red-500 neon-live-dot'
+                      : 'bg-gray-700'
+                    }
+                  `}
+                />
+              )}
             </Link>
           ))}
         </div>

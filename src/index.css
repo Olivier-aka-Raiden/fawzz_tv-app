@@ -30,6 +30,17 @@
   box-shadow: 0 0 10px rgba(145, 70, 255, 0.15), inset 0 0 10px rgba(145, 70, 255, 0.05);
 }
 
+/* Live indicator: glowing red dot that pulses */
+@utility neon-live-dot {
+  box-shadow: 0 0 6px rgba(239, 68, 68, 0.8), 0 0 14px rgba(239, 68, 68, 0.4);
+  animation: live-pulse 2s ease-in-out infinite;
+}
+
+@keyframes live-pulse {
+  0%, 100% { box-shadow: 0 0 6px rgba(239, 68, 68, 0.8), 0 0 14px rgba(239, 68, 68, 0.4); }
+  50%      { box-shadow: 0 0 12px rgba(239, 68, 68, 1), 0 0 24px rgba(239, 68, 68, 0.6); }
+}
+
 body {
   @apply bg-gray-950 text-gray-100 antialiased;
   margin: 0;

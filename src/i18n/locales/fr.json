@@ -64,7 +64,10 @@
   "live": {
     "title": "Live",
     "subtitle": "Rejoignez le stream en direct sur Twitch.",
-    "cta": "Ouvrir sur Twitch"
+    "cta": "Ouvrir sur Twitch",
+    "chat": "Chat",
+    "liveNow": "En direct",
+    "offline": "Hors ligne"
   },
   "sponsors": {
     "title": "Sponsors",

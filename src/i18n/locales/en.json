@@ -2,7 +2,6 @@
   "nav": {
     "home": "Home",
     "adventures": "Adventures",
-    "highlights": "Highlights",
     "clips": "Clips",
     "live": "Live",
     "sponsors": "Sponsors",
@@ -27,6 +26,11 @@
   "adventures": {
     "title": "Adventures",
     "subtitle": "Three cycling journeys streamed live on Twitch. From the first national epic to the international SubaBike format, each adventure pushes the boundaries of community-driven live content.",
+    "back": "Back to adventures",
+    "notFound": "Adventure not found.",
+    "story": "The Story",
+    "relatedClips": "Related Clips",
+    "relatedClipsComing": "Clips from this adventure will be available soon.",
     "cards": {
       "2022": {
         "title": "Sochaux → Nice",
@@ -52,13 +56,10 @@
       }
     }
   },
-  "highlights": {
-    "title": "Highlights",
-    "subtitle": "Memorable moments from the three cycling adventures. From the first French crossings to the international SubaBike."
-  },
   "clips": {
     "title": "Clips",
-    "subtitle": "The channel's best moments, captured by the community."
+    "subtitle": "The channel's best moments, captured by the community.",
+    "empty": "No clips yet."
   },
   "live": {
     "title": "Live",

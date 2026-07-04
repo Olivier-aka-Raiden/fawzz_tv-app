@@ -1,18 +1,31 @@
-import { useTranslation } from 'react-i18next';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import Layout from './components/layout/Layout';
+import ScrollToTop from './components/ScrollToTop';
+import Home from './components/home/Home';
+import Adventures from './components/adventures/Adventures';
+import AdventureDetail from './components/adventures/AdventureDetail';
+import Clips from './components/clips/Clips';
+import Live from './components/live/Live';
+import Sponsors from './components/sponsors/Sponsors';
+import About from './components/about/About';
+import NotFound from './components/shared/NotFound';
 
-function App() {
-  const { t } = useTranslation();
-
+export default function App() {
   return (
-    <div className="min-h-screen bg-gray-950 text-gray-100 flex flex-col items-center justify-center gap-6">
-      <img
-        src="/assets/brand/logo.png"
-        alt="Fawzz_tv"
-        className="h-32 w-auto drop-shadow-[0_0_30px_rgba(145,70,255,0.4)]"
-      />
-      <p className="text-gray-500 text-sm">{t('common.construction')}</p>
-    </div>
-  )
+    <BrowserRouter>
+      <ScrollToTop />
+      <Routes>
+        <Route element={<Layout />}>
+          <Route index element={<Home />} />
+          <Route path="aventures" element={<Adventures />} />
+          <Route path="aventures/:id" element={<AdventureDetail />} />
+          <Route path="clips" element={<Clips />} />
+          <Route path="live" element={<Live />} />
+          <Route path="sponsors" element={<Sponsors />} />
+          <Route path="a-propos" element={<About />} />
+          <Route path="*" element={<NotFound />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
+  );
 }
-
-export default App

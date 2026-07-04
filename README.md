@@ -1,32 +1,35 @@
-# React + TypeScript + Vite
+# fawzz_tv-app
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+Website for [Fawzz_tv](https://twitch.tv/fawzz_tv) — a French Twitch channel built around authenticity, community, and ambitious live challenges. Showcases cycling adventures and shares highlights for the community.
 
-Currently, two official plugins are available:
+## Stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- **Framework:** React 19 + TypeScript 6
+- **Build:** Vite 8
+- **Styling:** Tailwind CSS v4 (neon Twitch purple theme)
+- **Routing:** React Router 7
+- **Animation:** Framer Motion 12
+- **Icons:** Lucide React 1
+- **i18n:** i18next (FR/EN auto-detect)
+- **Maps:** Mapbox GL JS
+- **Deploy:** Vercel (static)
 
-## React Compiler
+## Development
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the Oxlint configuration
-
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
-
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+```bash
+npm install
+npm run dev        # http://localhost:5173
+npm run build      # production build → dist/
+npm run preview    # preview production build
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+## Pages
+
+| Page | Route |
+|------|-------|
+| Home | `/` |
+| Aventures | `/aventures` |
+| Clips | `/clips` |
+| Live | `/live` |
+| Sponsors | `/sponsors` |
+| À propos | `/a-propos` |

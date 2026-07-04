@@ -4,6 +4,32 @@
 /* Class-based dark mode — toggled via .dark on <html> */
 @custom-variant dark (&:where(.dark, .dark *));
 
+/* Twitch purple theme tokens */
+@theme {
+  --color-twitch: #9146FF;
+  --color-twitch-glow: #a970ff;
+  --color-twitch-dim: #772ce8;
+}
+
+/* Neon glow utilities */
+@utility neon-glow {
+  box-shadow: 0 0 15px rgba(145, 70, 255, 0.4), 0 0 30px rgba(145, 70, 255, 0.15);
+}
+
+@utility neon-glow-sm {
+  box-shadow: 0 0 8px rgba(145, 70, 255, 0.3), 0 0 15px rgba(145, 70, 255, 0.1);
+}
+
+@utility neon-text {
+  color: var(--color-twitch);
+  text-shadow: 0 0 10px rgba(145, 70, 255, 0.5), 0 0 20px rgba(145, 70, 255, 0.2);
+}
+
+@utility neon-border {
+  border-color: rgba(145, 70, 255, 0.4);
+  box-shadow: 0 0 10px rgba(145, 70, 255, 0.15), inset 0 0 10px rgba(145, 70, 255, 0.05);
+}
+
 body {
   @apply bg-gray-950 text-gray-100 antialiased;
   margin: 0;

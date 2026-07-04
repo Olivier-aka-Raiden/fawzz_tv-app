@@ -1,0 +1,85 @@
+{
+  "nav": {
+    "home": "Accueil",
+    "adventures": "Aventures",
+    "highlights": "Highlights",
+    "clips": "Clips",
+    "live": "Live",
+    "sponsors": "Sponsors",
+    "about": "À propos"
+  },
+  "home": {
+    "hero": {
+      "tagline": "Aventures cyclistes interactives sur Twitch — authenticité, communauté, et défis ambitieux.",
+      "cta": "Regarder sur Twitch"
+    },
+    "stats": {
+      "adventures": "Aventures",
+      "km": "Km parcourus",
+      "hours": "Heures streamées",
+      "watch": "Watch hours"
+    },
+    "overview": {
+      "title": "Les routes",
+      "subtitle": "Trois aventures, une progression spectaculaire"
+    }
+  },
+  "adventures": {
+    "title": "Aventures",
+    "subtitle": "Trois traversées à vélo streamées en direct sur Twitch. De la première épopée nationale au format SubaBike international, chaque aventure repousse les limites du direct communautaire.",
+    "cards": {
+      "2022": {
+        "title": "Sochaux → Nice",
+        "subtitle": "La première traversée de la France à vélo",
+        "description": "Première grande aventure cycliste en direct sur Twitch. 10 jours pour relier Sochaux à la Méditerranée, posant les bases de ce qui allait devenir une série de voyages communautaires.",
+        "badge": "2022",
+        "distance": "Distance",
+        "duration": "Durée",
+        "stream": "Stream",
+        "watch": "Watch"
+      },
+      "2023": {
+        "title": "Sochaux → Danemark",
+        "subtitle": "Première traversée européenne en autonomie",
+        "description": "Une expédition de 13 jours jusqu'au Danemark qui a confirmé la capacité à réaliser des aventures longue distance en totale autonomie, streamées en direct.",
+        "badge": "2023"
+      },
+      "2024": {
+        "title": "Sochaux → Malte",
+        "subtitle": "Le premier SubaBike — les subs ajoutent des kilomètres",
+        "description": "Le format SubaBike est né : chaque abonnement ajoute des kilomètres au lieu de temps. 34 jours d'aventure internationale où la communauté décide de la route en temps réel.",
+        "badge": "2024 • SubaBike"
+      }
+    }
+  },
+  "highlights": {
+    "title": "Highlights",
+    "subtitle": "Les moments marquants des trois aventures cyclistes. Des premières traversées françaises au SubaBike international."
+  },
+  "clips": {
+    "title": "Clips",
+    "subtitle": "Les meilleurs moments de la chaîne, capturés par la communauté."
+  },
+  "live": {
+    "title": "Live",
+    "subtitle": "Rejoignez le stream en direct sur Twitch.",
+    "cta": "Ouvrir sur Twitch"
+  },
+  "sponsors": {
+    "title": "Sponsors",
+    "subtitle": "Les marques et partenaires qui soutiennent la chaîne. Découvrez leurs produits et profitez des codes promo exclusifs.",
+    "empty": "Les sponsors seront annoncés prochainement.",
+    "emptySub": "Revenez bientôt pour découvrir les marques partenaires."
+  },
+  "about": {
+    "title": "À propos",
+    "subtitle": "L'histoire derrière la chaîne"
+  },
+  "footer": {
+    "rights": "Tous droits réservés.",
+    "madeWith": "Fait avec"
+  },
+  "common": {
+    "construction": "Site en construction"
+  }
+}

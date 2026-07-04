@@ -1,0 +1,85 @@
+{
+  "nav": {
+    "home": "Home",
+    "adventures": "Adventures",
+    "highlights": "Highlights",
+    "clips": "Clips",
+    "live": "Live",
+    "sponsors": "Sponsors",
+    "about": "About"
+  },
+  "home": {
+    "hero": {
+      "tagline": "Interactive cycling adventures on Twitch — authenticity, community, and ambitious challenges.",
+      "cta": "Watch on Twitch"
+    },
+    "stats": {
+      "adventures": "Adventures",
+      "km": "Km cycled",
+      "hours": "Hours streamed",
+      "watch": "Watch hours"
+    },
+    "overview": {
+      "title": "The Routes",
+      "subtitle": "Three adventures, one spectacular progression"
+    }
+  },
+  "adventures": {
+    "title": "Adventures",
+    "subtitle": "Three cycling journeys streamed live on Twitch. From the first national epic to the international SubaBike format, each adventure pushes the boundaries of community-driven live content.",
+    "cards": {
+      "2022": {
+        "title": "Sochaux → Nice",
+        "subtitle": "The first crossing of France by bike",
+        "description": "First major cycling adventure live on Twitch. 10 days from Sochaux to the Mediterranean, laying the foundation for a series of community journeys.",
+        "badge": "2022",
+        "distance": "Distance",
+        "duration": "Duration",
+        "stream": "Stream",
+        "watch": "Watch"
+      },
+      "2023": {
+        "title": "Sochaux → Denmark",
+        "subtitle": "First self-sufficient European crossing",
+        "description": "A 13-day expedition to Denmark that proved the viability of long-distance, fully self-sufficient adventures streamed live.",
+        "badge": "2023"
+      },
+      "2024": {
+        "title": "Sochaux → Malta",
+        "subtitle": "The first SubaBike — subs add kilometers",
+        "description": "The SubaBike format was born: each subscription adds kilometers instead of time. 34 days of international adventure where the community decides the route in real time.",
+        "badge": "2024 • SubaBike"
+      }
+    }
+  },
+  "highlights": {
+    "title": "Highlights",
+    "subtitle": "Memorable moments from the three cycling adventures. From the first French crossings to the international SubaBike."
+  },
+  "clips": {
+    "title": "Clips",
+    "subtitle": "The channel's best moments, captured by the community."
+  },
+  "live": {
+    "title": "Live",
+    "subtitle": "Join the live stream on Twitch.",
+    "cta": "Open on Twitch"
+  },
+  "sponsors": {
+    "title": "Sponsors",
+    "subtitle": "The brands and partners supporting the channel. Discover their products and enjoy exclusive promo codes.",
+    "empty": "Sponsors will be announced soon.",
+    "emptySub": "Come back soon to discover our partner brands."
+  },
+  "about": {
+    "title": "About",
+    "subtitle": "The story behind the channel"
+  },
+  "footer": {
+    "rights": "All rights reserved.",
+    "madeWith": "Made with"
+  },
+  "common": {
+    "construction": "Site under construction"
+  }
+}

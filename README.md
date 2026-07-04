@@ -29,8 +29,8 @@ npm run preview         # preview production build
 | Variable | Required | Description |
 |----------|----------|-------------|
 | `VITE_MAPBOX_TOKEN` | Yes | Mapbox public token (maps won't render without) |
-| `VITE_TWITCH_CLIENT_ID` | For clips | Twitch App client ID from [dev.twitch.tv](https://dev.twitch.tv/console/apps) |
-| `VITE_TWITCH_CLIENT_SECRET` | For clips | Twitch App client secret — clips fall back to static data if missing |
+| `TWITCH_CLIENT_ID` | For clips | Twitch App client ID — stored server-side in Vercel function |
+| `TWITCH_CLIENT_SECRET` | For clips | Twitch App client secret — **never exposed to browser** |
 
 ## Pages
 

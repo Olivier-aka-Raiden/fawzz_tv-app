@@ -11,7 +11,6 @@ export default function Navbar() {
   const isLive = useTwitchLive();
 
   const NAV_LINKS = [
-    { to: '/', label: t('nav.home') },
     { to: '/aventures', label: t('nav.adventures') },
     { to: '/clips', label: t('nav.clips') },
     { to: '/live', label: t('nav.live'), liveIndicator: true },
@@ -22,8 +21,20 @@ export default function Navbar() {
   return (
     <nav className="fixed top-0 w-full z-50 bg-gray-950/80 backdrop-blur-md border-b border-gray-800">
       <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
-        <Link to="/" className="flex items-center gap-2" onClick={() => setOpen(false)}>
-          <img src="/assets/brand/logo.png" alt="Fawzz_tv" className="h-8 w-auto" />
+        {/* Brand — logo + FAWZZ_TV */}
+        <Link
+          to="/"
+          className="flex items-center gap-3 group"
+          onClick={() => setOpen(false)}
+        >
+          <img
+            src="/assets/brand/logo.png"
+            alt="FAWZZ_TV"
+            className="h-8 w-auto"
+          />
+          <span className="brand-text-hover text-sm sm:text-base whitespace-nowrap">
+            FAWZZ_TV
+          </span>
         </Link>
 
         {/* Desktop */}

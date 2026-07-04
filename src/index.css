@@ -9,6 +9,7 @@
   --color-twitch: #9146FF;
   --color-twitch-glow: #a970ff;
   --color-twitch-dim: #772ce8;
+  --font-brand: "Orbitron", sans-serif;
 }
 
 /* Neon glow utilities */
@@ -39,6 +40,62 @@
 @keyframes live-pulse {
   0%, 100% { box-shadow: 0 0 6px rgba(239, 68, 68, 0.8), 0 0 14px rgba(239, 68, 68, 0.4); }
   50%      { box-shadow: 0 0 12px rgba(239, 68, 68, 1), 0 0 24px rgba(239, 68, 68, 0.6); }
+}
+
+/* Brand text — Orbitron font with metallic shine animation */
+@utility brand-text {
+  font-family: var(--font-brand);
+  font-weight: 900;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  background: linear-gradient(
+    135deg,
+    #c0c0c0 0%,
+    #e8e8e8 20%,
+    #ffffff 40%,
+    #a8a8a8 60%,
+    #d4d4d4 80%,
+    #c0c0c0 100%
+  );
+  background-size: 200% auto;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  animation: metallic-shine 3s linear infinite;
+}
+
+@keyframes metallic-shine {
+  0%   { background-position: 200% center; }
+  100% { background-position: 0% center; }
+}
+
+/* Brand text — paused by default, shines on hover (used as a regular class) */
+.brand-text-hover {
+  font-family: var(--font-brand);
+  font-weight: 900;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  background: linear-gradient(
+    135deg,
+    #c0c0c0 0%,
+    #e8e8e8 20%,
+    #ffffff 40%,
+    #a8a8a8 60%,
+    #d4d4d4 80%,
+    #c0c0c0 100%
+  );
+  background-size: 200% auto;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  background-position: 200% center;
+  transition: background-position 0.4s ease;
+}
+
+.brand-text-hover:hover {
+  background-position: 0% center;
 }
 
 body {

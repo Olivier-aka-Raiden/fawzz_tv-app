@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Tv, MessageCircle, Video, Ghost, Music2 } from 'lucide-react';
 
@@ -14,8 +15,16 @@ export default function Footer() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="border-t border-gray-800 bg-gray-950 py-8">
-      <div className="max-w-7xl mx-auto px-4 text-center text-gray-500 text-sm space-y-4">
+    <footer className="border-t border-gray-800 bg-gray-950 py-10">
+      <div className="max-w-7xl mx-auto px-4 text-center text-gray-500 text-sm space-y-5">
+        {/* Brand */}
+        <Link to="/" className="inline-block">
+          <span className="brand-text-hover text-lg">
+            FAWZZ_TV
+          </span>
+        </Link>
+
+        {/* Socials */}
         <div className="flex justify-center gap-6">
           {SOCIALS.map(social => (
             <a
@@ -30,7 +39,9 @@ export default function Footer() {
             </a>
           ))}
         </div>
-        <p>© {year} Fawzz_tv. {t('footer.rights')}</p>
+
+        {/* Copyright */}
+        <p>© {year} FAWZZ_TV. {t('footer.rights')}</p>
       </div>
     </footer>
   );

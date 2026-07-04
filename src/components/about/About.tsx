@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next';
+import { motion } from 'framer-motion';
 import { Tv, MessageCircle, Video, Ghost, Music2, Heart } from 'lucide-react';
 
 const SOCIALS = [
@@ -7,35 +8,30 @@ const SOCIALS = [
     label: 'Twitch',
     icon: Tv,
     color: 'text-twitch border-twitch/30 bg-twitch/20 hover:bg-twitch/30',
-    hoverColor: 'hover:text-twitch',
   },
   {
     href: 'https://x.com/Fawzz_tv',
     label: 'X (Twitter)',
     icon: MessageCircle,
     color: 'text-gray-300 border-gray-600 bg-gray-800/40 hover:bg-gray-700',
-    hoverColor: 'hover:text-gray-200',
   },
   {
     href: 'https://www.tiktok.com/@fawzztv',
     label: 'TikTok',
     icon: Music2,
     color: 'text-pink-400 border-pink-600/30 bg-pink-600/20 hover:bg-pink-600/30',
-    hoverColor: 'hover:text-pink-400',
   },
   {
     href: 'https://snapchat.com/add/fawzz_tv',
     label: 'Snapchat',
     icon: Ghost,
     color: 'text-yellow-400 border-yellow-600/30 bg-yellow-600/20 hover:bg-yellow-600/30',
-    hoverColor: 'hover:text-yellow-400',
   },
   {
     href: 'https://www.youtube.com/@Fawzztv',
     label: 'YouTube',
     icon: Video,
     color: 'text-red-400 border-red-600/30 bg-red-600/20 hover:bg-red-600/30',
-    hoverColor: 'hover:text-red-400',
   },
 ];
 
@@ -44,15 +40,37 @@ export default function About() {
 
   return (
     <section className="py-16 px-4 max-w-3xl mx-auto">
-      <div className="text-center mb-12">
-        <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">{t('about.title')}</h1>
-        <p className="text-gray-400">{t('about.subtitle')}</p>
-      </div>
+      {/* Brand name — main element */}
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="text-center mb-4"
+      >
+        <h1 className="brand-text text-5xl sm:text-6xl md:text-7xl">
+          FAWZZ_TV
+        </h1>
+      </motion.div>
+
+      {/* Subtitle */}
+      <motion.p
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.2 }}
+        className="text-center text-gray-500 text-lg mb-12"
+      >
+        {t('about.title')} — {t('about.subtitle')}
+      </motion.p>
 
       <div className="space-y-8 text-gray-300 leading-relaxed">
-        <div className="bg-gray-900 border border-gray-800 rounded-2xl p-8 space-y-6">
+        {/* Bio */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+          className="bg-gray-900 border border-gray-800 rounded-2xl p-8 space-y-6"
+        >
           <p>
-            Fawzz_tv est une chaîne Twitch française construite autour de l'authenticité,
+            FAWZZ_TV est une chaîne Twitch française construite autour de l'authenticité,
             de la communauté et des défis ambitieux. Après 8 ans de streaming, ce qui a
             commencé comme une chaîne FPS compétitive (Counter-Strike, Valorant) est
             devenu un espace où le gaming coexiste avec des aventures IRL originales.
@@ -67,10 +85,15 @@ export default function About() {
             mémorables ensemble, avec une emphase sur les rencontres humaines, la
             spontanéité et le storytelling.
           </p>
-        </div>
+        </motion.div>
 
         {/* Social links */}
-        <div className="flex flex-wrap justify-center gap-4">
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4 }}
+          className="flex flex-wrap justify-center gap-4"
+        >
           {SOCIALS.map(social => (
             <a
               key={social.label}
@@ -83,7 +106,7 @@ export default function About() {
               {social.label}
             </a>
           ))}
-        </div>
+        </motion.div>
 
         <p className="text-center text-gray-600 text-sm">
           {t('footer.madeWith')} <Heart size={14} className="inline text-red-500" /> par la communauté

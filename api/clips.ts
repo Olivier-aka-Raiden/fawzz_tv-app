@@ -2,7 +2,8 @@
  * Vercel serverless function — proxies Twitch clip requests.
  * Secrets stay server-side, never exposed to the client.
  *
- * GET /api/clips → returns ClipData[] as JSON
+ * GET /api/clips                          → all clips, sorted by popularity
+ * GET /api/clips?started_at=ISO&ended_at=ISO → clips within date range
  */
 
 const CLIENT_ID = process.env.TWITCH_CLIENT_ID!;
@@ -74,8 +75,7 @@ interface ClipData {
   clippedBy?: string;
 }
 
-export async function GET(): Promise<Response> {
-  // CORS
+export async function GET(request: Request): Promise<Response> {
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
     'Access-Control-Allow-Origin': '*',
@@ -87,6 +87,11 @@ export async function GET(): Promise<Response> {
       { status: 500, headers },
     );
   }
+
+  // Parse optional date filters from query string
+  const url = new URL(request.url);
+  const startedAt = url.searchParams.get('started_at') || undefined;
+  const endedAt = url.searchParams.get('ended_at') || undefined;
 
   try {
     // Resolve broadcaster ID
@@ -103,6 +108,8 @@ export async function GET(): Promise<Response> {
         first: '20',
       });
       if (cursor) params.set('after', cursor);
+      if (startedAt) params.set('started_at', startedAt);
+      if (endedAt) params.set('ended_at', endedAt);
 
       const data = await twitchRequest<{
         data: TwitchClip[];
@@ -126,6 +133,7 @@ export async function GET(): Promise<Response> {
       if (!cursor || data.data.length === 0) break;
     }
 
+    // Sort by view count descending
     allClips.sort((a, b) => b.viewCount - a.viewCount);
 
     return new Response(JSON.stringify(allClips), { status: 200, headers });

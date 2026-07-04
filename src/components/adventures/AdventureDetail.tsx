@@ -5,6 +5,8 @@ import { motion } from 'framer-motion';
 import { PROJECTS } from '../../data/adventures';
 import { ROUTES } from '../../data/routes';
 import RouteMap from '../shared/RouteMap';
+import ClipCard from '../clips/ClipCard';
+import { useAdventureClips } from '../../hooks/useClips';
 
 function formatDate(iso: string): string {
   return new Date(iso).toLocaleDateString(undefined, { day: 'numeric', month: 'long', year: 'numeric' });
@@ -28,6 +30,13 @@ export default function AdventureDetail() {
   }
 
   const route = ROUTES.find(r => r.id === project.routeId);
+
+  // Fetch clips for this adventure's date range
+  const adventureClips = useAdventureClips(
+    project.dates?.start ?? '',
+    project.dates?.end ?? '',
+  );
+  const hasDates = !!(project.dates?.start && project.dates?.end);
 
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="py-8 px-4 max-w-6xl mx-auto">
@@ -162,9 +171,42 @@ export default function AdventureDetail() {
         className="mb-12"
       >
         <h2 className="text-xl font-bold text-white mb-4">{t('adventures.relatedClips')}</h2>
-        <div className="bg-gray-900 border border-gray-800 rounded-2xl p-8 text-center">
-          <p className="text-gray-500">{t('adventures.relatedClipsComing')}</p>
-        </div>
+
+        {hasDates ? (
+          <>
+            {adventureClips.loading && adventureClips.clips.length === 0 && (
+              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {Array.from({ length: 3 }).map((_, i) => (
+                  <div key={i} className="bg-gray-900 border border-gray-800 rounded-xl overflow-hidden animate-pulse">
+                    <div className="aspect-video bg-gray-800" />
+                    <div className="p-4 space-y-2">
+                      <div className="h-4 bg-gray-800 rounded w-3/4" />
+                      <div className="h-3 bg-gray-800 rounded w-1/2" />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {adventureClips.clips.length > 0 && (
+              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {adventureClips.clips.slice(0, 6).map((clip, i) => (
+                  <ClipCard key={clip.id} clip={clip} index={i} />
+                ))}
+              </div>
+            )}
+
+            {!adventureClips.loading && adventureClips.clips.length === 0 && (
+              <div className="bg-gray-900 border border-gray-800 rounded-2xl p-8 text-center">
+                <p className="text-gray-500">{t('adventures.relatedClipsComing')}</p>
+              </div>
+            )}
+          </>
+        ) : (
+          <div className="bg-gray-900 border border-gray-800 rounded-2xl p-8 text-center">
+            <p className="text-gray-500">{t('adventures.relatedClipsComing')}</p>
+          </div>
+        )}
       </motion.div>
 
       {/* Timeline — all adventures */}

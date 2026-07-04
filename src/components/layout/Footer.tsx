@@ -1,5 +1,13 @@
 import { useTranslation } from 'react-i18next';
-import { Tv, MessageCircle, Video } from 'lucide-react';
+import { Tv, MessageCircle, Video, Ghost, Music2 } from 'lucide-react';
+
+const SOCIALS = [
+  { href: 'https://www.twitch.tv/fawzz_tv', label: 'Twitch', icon: Tv, hoverClass: 'hover:text-twitch' },
+  { href: 'https://x.com/Fawzz_tv', label: 'X (Twitter)', icon: MessageCircle, hoverClass: 'hover:text-gray-200' },
+  { href: 'https://www.tiktok.com/@fawzztv', label: 'TikTok', icon: Music2, hoverClass: 'hover:text-pink-400' },
+  { href: 'https://snapchat.com/add/fawzz_tv', label: 'Snapchat', icon: Ghost, hoverClass: 'hover:text-yellow-400' },
+  { href: 'https://www.youtube.com/@Fawzztv', label: 'YouTube', icon: Video, hoverClass: 'hover:text-red-400' },
+];
 
 export default function Footer() {
   const { t } = useTranslation();
@@ -9,18 +17,18 @@ export default function Footer() {
     <footer className="border-t border-gray-800 bg-gray-950 py-8">
       <div className="max-w-7xl mx-auto px-4 text-center text-gray-500 text-sm space-y-4">
         <div className="flex justify-center gap-6">
-          <a href="https://twitch.tv/fawzz_tv" target="_blank" rel="noopener noreferrer"
-             className="hover:text-twitch transition-colors p-1" aria-label="Twitch">
-            <Tv size={20} />
-          </a>
-          <a href="https://twitter.com/fawzz_tv" target="_blank" rel="noopener noreferrer"
-             className="hover:text-blue-400 transition-colors p-1" aria-label="Twitter">
-            <MessageCircle size={20} />
-          </a>
-          <a href="https://youtube.com/@fawzz_tv" target="_blank" rel="noopener noreferrer"
-             className="hover:text-red-400 transition-colors p-1" aria-label="YouTube">
-            <Video size={20} />
-          </a>
+          {SOCIALS.map(social => (
+            <a
+              key={social.label}
+              href={social.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={`transition-colors p-1 ${social.hoverClass}`}
+              aria-label={social.label}
+            >
+              <social.icon size={20} />
+            </a>
+          ))}
         </div>
         <p>© {year} Fawzz_tv. {t('footer.rights')}</p>
       </div>

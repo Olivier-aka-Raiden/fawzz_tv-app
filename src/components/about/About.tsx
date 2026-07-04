@@ -1,5 +1,43 @@
 import { useTranslation } from 'react-i18next';
-import { Tv, MessageCircle, Video, Heart } from 'lucide-react';
+import { Tv, MessageCircle, Video, Ghost, Music2, Heart } from 'lucide-react';
+
+const SOCIALS = [
+  {
+    href: 'https://www.twitch.tv/fawzz_tv',
+    label: 'Twitch',
+    icon: Tv,
+    color: 'text-twitch border-twitch/30 bg-twitch/20 hover:bg-twitch/30',
+    hoverColor: 'hover:text-twitch',
+  },
+  {
+    href: 'https://x.com/Fawzz_tv',
+    label: 'X (Twitter)',
+    icon: MessageCircle,
+    color: 'text-gray-300 border-gray-600 bg-gray-800/40 hover:bg-gray-700',
+    hoverColor: 'hover:text-gray-200',
+  },
+  {
+    href: 'https://www.tiktok.com/@fawzztv',
+    label: 'TikTok',
+    icon: Music2,
+    color: 'text-pink-400 border-pink-600/30 bg-pink-600/20 hover:bg-pink-600/30',
+    hoverColor: 'hover:text-pink-400',
+  },
+  {
+    href: 'https://snapchat.com/add/fawzz_tv',
+    label: 'Snapchat',
+    icon: Ghost,
+    color: 'text-yellow-400 border-yellow-600/30 bg-yellow-600/20 hover:bg-yellow-600/30',
+    hoverColor: 'hover:text-yellow-400',
+  },
+  {
+    href: 'https://www.youtube.com/@Fawzztv',
+    label: 'YouTube',
+    icon: Video,
+    color: 'text-red-400 border-red-600/30 bg-red-600/20 hover:bg-red-600/30',
+    hoverColor: 'hover:text-red-400',
+  },
+];
 
 export default function About() {
   const { t } = useTranslation();
@@ -31,19 +69,20 @@ export default function About() {
           </p>
         </div>
 
+        {/* Social links */}
         <div className="flex flex-wrap justify-center gap-4">
-          <a href="https://twitch.tv/fawzz_tv" target="_blank" rel="noopener noreferrer"
-             className="flex items-center gap-2 px-6 py-3 bg-twitch/20 hover:bg-twitch/30 text-twitch rounded-xl transition-colors border border-twitch/30">
-            <Tv size={20} /> Twitch
-          </a>
-          <a href="https://twitter.com/fawzz_tv" target="_blank" rel="noopener noreferrer"
-             className="flex items-center gap-2 px-6 py-3 bg-blue-600/20 hover:bg-blue-600/30 text-blue-400 rounded-xl transition-colors border border-blue-600/30">
-            <MessageCircle size={20} /> Twitter
-          </a>
-          <a href="https://youtube.com/@fawzz_tv" target="_blank" rel="noopener noreferrer"
-             className="flex items-center gap-2 px-6 py-3 bg-red-600/20 hover:bg-red-600/30 text-red-400 rounded-xl transition-colors border border-red-600/30">
-            <Video size={20} /> YouTube
-          </a>
+          {SOCIALS.map(social => (
+            <a
+              key={social.label}
+              href={social.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={`flex items-center gap-2 px-6 py-3 rounded-xl transition-colors border ${social.color}`}
+            >
+              <social.icon size={20} />
+              {social.label}
+            </a>
+          ))}
         </div>
 
         <p className="text-center text-gray-600 text-sm">

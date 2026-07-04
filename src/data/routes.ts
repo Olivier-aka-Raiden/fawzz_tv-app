@@ -63,8 +63,8 @@ export const ROUTES: RouteData[] = [
             [8.6821, 50.1109],   // Frankfurt
             [9.7320, 52.3759],   // Hannover
             [9.9937, 53.5511],   // Hamburg
-            [9.4330, 54.7937],   // Flensburg
-            [10.2000, 55.4500],  // Odense
+            [11.1833, 54.4333],  // Fehmarn (Puttgarden) ⛴
+            [11.3833, 54.6667],  // Rødbyhavn ⛴
             [12.5683, 55.6761],  // Copenhague
           ],
         },
@@ -87,15 +87,19 @@ export const ROUTES: RouteData[] = [
           type: 'LineString',
           coordinates: [
             [6.8333, 47.5167],   // Sochaux
+            [6.0245, 47.2378],   // Besançon
+            [5.0378, 47.3230],   // Dijon
             [4.8357, 45.7640],   // Lyon
-            [5.7245, 45.1885],   // Grenoble
-            [7.2661, 43.7031],   // Nice
-            [8.9463, 44.4056],   // Genoa
+            [5.3698, 43.2965],   // Marseille
+            [3.6961, 43.4028],   // Sète
+            [3.2190, 43.3476],   // Béziers
+            [3.6961, 43.4028],   // Sète (retour)
+            [5.3698, 43.2965],   // Marseille (retour)
             [10.4017, 43.7228],  // Pisa
-            [11.7969, 42.0924],  // Civitavecchia
             [12.4964, 41.9028],  // Rome
-            [14.2681, 40.8518],  // Naples
+            [11.7969, 42.0924],  // Civitavecchia ⛴
             [13.3615, 38.1157],  // Palermo
+            [14.8467, 36.7263],  // Pozzallo ⛴
             [14.5146, 35.8997],  // La Valette (Malta)
           ],
         },

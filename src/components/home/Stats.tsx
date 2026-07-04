@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 
 const STAT_VALUES = [
   { key: 'adventures', value: '3' },
-  { key: 'km', value: '3 420' },
+  { key: 'km', value: '3 920' },
   { key: 'hours', value: '552 h' },
   { key: 'watch', value: '93.1K' },
 ];

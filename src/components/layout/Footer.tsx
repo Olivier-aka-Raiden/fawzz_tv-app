@@ -6,7 +6,7 @@ const SOCIALS = [
   { href: 'https://www.twitch.tv/fawzz_tv', label: 'Twitch', icon: Tv, hoverClass: 'hover:text-twitch' },
   { href: 'https://x.com/Fawzz_tv', label: 'X (Twitter)', icon: MessageCircle, hoverClass: 'hover:text-gray-200' },
   { href: 'https://www.tiktok.com/@fawzztv', label: 'TikTok', icon: Music2, hoverClass: 'hover:text-pink-400' },
-  { href: 'https://snapchat.com/add/fawzz_tv', label: 'Snapchat', icon: Ghost, hoverClass: 'hover:text-yellow-400' },
+  { href: 'https://snapchat.com/add/fawzz-tv', label: 'Snapchat', icon: Ghost, hoverClass: 'hover:text-yellow-400' },
   { href: 'https://www.youtube.com/@Fawzztv', label: 'YouTube', icon: Video, hoverClass: 'hover:text-red-400' },
 ];
 

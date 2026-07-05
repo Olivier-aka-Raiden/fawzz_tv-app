@@ -22,7 +22,7 @@ const SOCIALS = [
     color: 'text-pink-400 border-pink-600/30 bg-pink-600/20 hover:bg-pink-600/30',
   },
   {
-    href: 'https://snapchat.com/add/fawzz_tv',
+    href: 'https://snapchat.com/add/fawzz-tv',
     label: 'Snapchat',
     icon: Ghost,
     color: 'text-yellow-400 border-yellow-600/30 bg-yellow-600/20 hover:bg-yellow-600/30',

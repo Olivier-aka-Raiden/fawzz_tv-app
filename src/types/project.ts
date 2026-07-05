@@ -9,4 +9,6 @@ export interface Project {
   routeId?: string;
   highlights?: string[];
   comingSoon?: boolean;
+  /** i18n key prefix for translatable fields (title, subtitle, description, badge, stats labels) */
+  tKey?: string;
 }

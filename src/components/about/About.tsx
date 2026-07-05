@@ -39,79 +39,77 @@ export default function About() {
   const { t } = useTranslation();
 
   return (
-    <section className="py-16 px-4 max-w-3xl mx-auto">
-      {/* Brand name — main element */}
+    <section className="pt-20 pb-16 px-4 max-w-6xl mx-auto">
+      {/* Header: portrait left, title right — same width as bio card */}
       <motion.div
-        initial={{ opacity: 0, y: -20 }}
+        initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="text-center mb-4"
+        className="max-w-3xl mx-auto flex flex-col md:flex-row items-center gap-6 md:gap-10 mb-14"
       >
-        <h1 className="brand-text text-5xl sm:text-6xl md:text-7xl">
-          FAWZZ_TV
-        </h1>
+        {/* Portrait — left */}
+        <div className="md:w-2/5 shrink-0 flex justify-center">
+          <picture>
+            <source srcSet="/assets/brand/fawzz-portrait-bg.webp" media="(min-width: 641px)" />
+            <img
+              src="/assets/brand/fawzz-portrait-bg-sm.webp"
+              alt="Fawzz_tv"
+              className="w-56 sm:w-72 md:w-full max-w-xs rounded-2xl shadow-2xl shadow-black/40 object-cover object-top"
+              loading="eager"
+            />
+          </picture>
+        </div>
+
+        {/* Title — right */}
+        <div className="md:w-3/5 text-center md:text-left">
+          <h1 className="brand-text text-4xl sm:text-5xl md:text-6xl mb-3">FAWZZ_TV</h1>
+          <p className="text-gray-400 text-base sm:text-lg">
+            {t('about.title')} — {t('about.subtitle')}
+          </p>
+        </div>
       </motion.div>
 
-      {/* Subtitle */}
+      {/* Bio card — centered */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.2 }}
+        className="max-w-3xl mx-auto bg-gray-900 border border-gray-800 rounded-2xl p-6 sm:p-8 space-y-5 mb-12"
+      >
+        {(t('about.bio', { returnObjects: true }) as string[]).map((p, i) => (
+          <p key={i} className="text-gray-300 leading-relaxed text-sm sm:text-base">{p}</p>
+        ))}
+      </motion.div>
+
+      {/* Social links — centered */}
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.4 }}
+        className="flex flex-wrap justify-center gap-3 mb-6"
+      >
+        {SOCIALS.map(social => (
+          <a
+            key={social.label}
+            href={social.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={`flex items-center gap-2 px-5 py-2.5 rounded-xl transition-colors border text-sm ${social.color}`}
+          >
+            <social.icon size={18} />
+            <span className="hidden sm:inline">{social.label}</span>
+          </a>
+        ))}
+      </motion.div>
+
+      {/* Footer — centered */}
       <motion.p
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 0.2 }}
-        className="text-center text-gray-500 text-lg mb-12"
+        transition={{ delay: 0.5 }}
+        className="text-center text-gray-600 text-sm"
       >
-        {t('about.title')} — {t('about.subtitle')}
+        {t('footer.madeWith')} <Heart size={14} className="inline text-red-500" /> {t('footer.madeBy')}
       </motion.p>
-
-      <div className="space-y-8 text-gray-300 leading-relaxed">
-        {/* Bio */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-          className="bg-gray-900 border border-gray-800 rounded-2xl p-8 space-y-6"
-        >
-          <p>
-            FAWZZ_TV est une chaîne Twitch française construite autour de l'authenticité,
-            de la communauté et des défis ambitieux. Après 8 ans de streaming, ce qui a
-            commencé comme une chaîne FPS compétitive (Counter-Strike, Valorant) est
-            devenu un espace où le gaming coexiste avec des aventures IRL originales.
-          </p>
-          <p>
-            La caractéristique principale de la chaîne est la relation avec sa communauté.
-            Plutôt que de simplement regarder, les viewers façonnent activement le contenu
-            à travers leurs décisions, interactions et soutien.
-          </p>
-          <p>
-            La chaîne ne cherche pas les moments viraux — elle crée des aventures
-            mémorables ensemble, avec une emphase sur les rencontres humaines, la
-            spontanéité et le storytelling.
-          </p>
-        </motion.div>
-
-        {/* Social links */}
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
-          className="flex flex-wrap justify-center gap-4"
-        >
-          {SOCIALS.map(social => (
-            <a
-              key={social.label}
-              href={social.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={`flex items-center gap-2 px-6 py-3 rounded-xl transition-colors border ${social.color}`}
-            >
-              <social.icon size={20} />
-              {social.label}
-            </a>
-          ))}
-        </motion.div>
-
-        <p className="text-center text-gray-600 text-sm">
-          {t('footer.madeWith')} <Heart size={14} className="inline text-red-500" /> par la communauté
-        </p>
-      </div>
     </section>
   );
 }

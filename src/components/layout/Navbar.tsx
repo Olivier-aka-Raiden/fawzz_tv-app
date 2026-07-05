@@ -27,11 +27,13 @@ export default function Navbar() {
           className="flex items-center gap-3 group"
           onClick={() => setOpen(false)}
         >
-          <img
-            src="/assets/brand/logo.png"
-            alt="FAWZZ_TV"
-            className="h-8 w-auto"
-          />
+          <div className="h-8 w-8 rounded-full overflow-hidden border border-twitch/30">
+            <img
+              src="/assets/brand/fawzz-subabike.jpg"
+              alt="FAWZZ_TV"
+              className="h-full w-full object-cover"
+            />
+          </div>
           <span className="brand-text text-sm sm:text-base whitespace-nowrap">
             FAWZZ_TV
           </span>

@@ -43,12 +43,18 @@
     "timelineSub": "L'évolution des aventures SubaBike",
     "comingSoonTeaser": "Les détails de cette aventure seront dévoilés prochainement. Restez à l'écoute !",
     "comingSoonCta": "Suivez la chaîne Twitch pour ne rien manquer de l'annonce.",
+    "comingSoon": "Bientôt",
+    "statsDistance": "Distance",
+    "statsDuration": "Durée",
+    "statsStream": "Stream",
+    "statsWatch": "Watch",
     "cards": {
       "2022": {
         "title": "Sochaux → Nice",
         "subtitle": "La première traversée de la France à vélo",
         "description": "Première grande aventure cycliste en direct sur Twitch. 11 jours pour relier Sochaux à la Méditerranée, posant les bases de ce qui allait devenir une série de voyages communautaires.",
         "badge": "2022",
+        "story": "En juillet 2022, Fawzz_tv se lance dans son premier grand défi IRL : traverser la France à vélo, de Sochaux à Nice, en streamant l'intégralité du parcours en direct sur Twitch. L'équipement était minimal, l'organisation artisanale — mais l'énergie de la communauté était au rendez-vous. L'arrivée sur la Méditerranée a marqué la naissance d'un nouveau format sur la chaîne.",
         "distance": "Distance",
         "duration": "Durée",
         "stream": "Stream",
@@ -58,20 +64,38 @@
         "title": "Sochaux → Danemark",
         "subtitle": "Première traversée européenne en autonomie",
         "description": "Une expédition de 13 jours jusqu'au Danemark qui a confirmé la capacité à réaliser des aventures longue distance en totale autonomie, streamées en direct.",
-        "badge": "2023"
+        "badge": "2023",
+        "story": "Forte du succès de la première édition, l'aventure 2023 voit plus grand : une traversée européenne jusqu'au Danemark. Avec 1 000 km au compteur et 4 pays traversés, cette édition a confirmé que le format longue distance en autonomie était viable — et que la communauté était prête à suivre sur la durée."
       },
       "2024": {
         "title": "Sochaux → Malte",
         "subtitle": "Le premier SubaBike — les subs ajoutent des kilomètres",
         "description": "Le format SubaBike est né : chaque abonnement ajoute des kilomètres au lieu de temps. 34 jours d'aventure internationale où la communauté décide de la route en temps réel.",
-        "badge": "2024 • SubaBike"
+        "badge": "2024 • SubaBike",
+        "story": "L'édition 2024 a tout changé avec l'introduction du format SubaBike : chaque abonnement ajoute des kilomètres au parcours. Un donateur a fait exploser le compteur en ajoutant 1 700 km d'un coup. Résultat : 34 jours de stream, 5 pays traversés, et une aventure dont la communauté a littéralement écrit le scénario en temps réel."
+      },
+      "2026": {
+        "title": "SubaBike 2026",
+        "subtitle": "La prochaine aventure se prépare…",
+        "description": "Après la France, le Danemark, et Malte, une nouvelle destination se profile. Le format SubaBike revient en 2026 pour une aventure encore plus ambitieuse — la destination sera dévoilée prochainement. Restez connectés.",
+        "badge": "2026 • À venir"
       }
-    }
+    },
+    "current": "Actuel"
   },
   "clips": {
     "title": "Clips",
     "subtitle": "Les meilleurs moments de la chaîne, capturés par la communauté.",
-    "empty": "Aucun clip pour le moment."
+    "empty": "Aucun clip pour le moment.",
+    "noResults": "Aucun clip trouvé",
+    "noResultsHint": "Essayez de modifier vos filtres ou votre recherche.",
+    "results": "clips",
+    "searchPlaceholder": "Rechercher un clip…",
+    "allYears": "Toutes les années",
+    "sortViews": "Plus vus",
+    "sortDate": "Plus récents",
+    "filterBy": "Filtrer",
+    "allTag": "Tout"
   },
   "live": {
     "title": "Live",
@@ -89,11 +113,17 @@
   },
   "about": {
     "title": "À propos",
-    "subtitle": "L'histoire derrière la chaîne"
+    "subtitle": "L'histoire derrière la chaîne",
+    "bio": [
+      "FAWZZ_TV est une chaîne Twitch française construite autour de l'authenticité, de la communauté et des défis ambitieux. Après 8 ans de streaming, ce qui a commencé comme une chaîne FPS compétitive (Counter-Strike, Valorant) est devenu un espace où le gaming coexiste avec des aventures IRL originales.",
+      "La caractéristique principale de la chaîne est la relation avec sa communauté. Plutôt que de simplement regarder, les viewers façonnent activement le contenu à travers leurs décisions, interactions et soutien.",
+      "La chaîne ne cherche pas les moments viraux — elle crée des aventures mémorables ensemble, avec une emphase sur les rencontres humaines, la spontanéité et le storytelling."
+    ]
   },
   "footer": {
     "rights": "Tous droits réservés.",
-    "madeWith": "Fait avec"
+    "madeWith": "Fait avec",
+    "madeBy": "par la communauté"
   },
   "common": {
     "construction": "Site en construction"

@@ -43,12 +43,18 @@
     "timelineSub": "The evolution of SubaBike adventures",
     "comingSoonTeaser": "Details about this adventure will be revealed soon. Stay tuned!",
     "comingSoonCta": "Follow the Twitch channel to catch the announcement.",
+    "comingSoon": "Coming soon",
+    "statsDistance": "Distance",
+    "statsDuration": "Duration",
+    "statsStream": "Stream",
+    "statsWatch": "Watch",
     "cards": {
       "2022": {
         "title": "Sochaux → Nice",
         "subtitle": "The first crossing of France by bike",
         "description": "First major cycling adventure live on Twitch. 11 days from Sochaux to the Mediterranean, laying the foundation for a series of community journeys.",
         "badge": "2022",
+        "story": "In July 2022, Fawzz_tv took on his first major IRL challenge: cycling across France, from Sochaux to Nice, streaming the entire journey live on Twitch. The gear was minimal, the logistics homemade — but the community's energy was unmatched. Reaching the Mediterranean marked the birth of a new format on the channel.",
         "distance": "Distance",
         "duration": "Duration",
         "stream": "Stream",
@@ -58,20 +64,38 @@
         "title": "Sochaux → Denmark",
         "subtitle": "First self-sufficient European crossing",
         "description": "A 13-day expedition to Denmark that proved the viability of long-distance, fully self-sufficient adventures streamed live.",
-        "badge": "2023"
+        "badge": "2023",
+        "story": "Building on the first edition's success, the 2023 adventure went bigger: a European crossing all the way to Denmark. With 1,000 km covered and 4 countries crossed, this edition proved the long-distance self-sufficient format was viable — and that the community was ready to follow for the long haul."
       },
       "2024": {
         "title": "Sochaux → Malta",
         "subtitle": "The first SubaBike — subs add kilometers",
         "description": "The SubaBike format was born: each subscription adds kilometers instead of time. 34 days of international adventure where the community decides the route in real time.",
-        "badge": "2024 • SubaBike"
+        "badge": "2024 • SubaBike",
+        "story": "The 2024 edition changed everything with the SubaBike format: each subscription adds kilometers to the route. One donor blew up the counter by adding 1,700 km in one go. The result: 34 days of streaming, 5 countries crossed, and an adventure whose script was literally written by the community in real time."
+      },
+      "2026": {
+        "title": "SubaBike 2026",
+        "subtitle": "The next adventure is in the works…",
+        "description": "After France, Denmark, and Malta, a new destination is on the horizon. SubaBike returns in 2026 for an even more ambitious adventure — stay tuned for the reveal.",
+        "badge": "2026 • Coming soon"
       }
-    }
+    },
+    "current": "Current"
   },
   "clips": {
     "title": "Clips",
     "subtitle": "The channel's best moments, captured by the community.",
-    "empty": "No clips yet."
+    "empty": "No clips yet.",
+    "noResults": "No clips found",
+    "noResultsHint": "Try adjusting your filters or search.",
+    "results": "clips",
+    "searchPlaceholder": "Search clips…",
+    "allYears": "All years",
+    "sortViews": "Most viewed",
+    "sortDate": "Newest",
+    "filterBy": "Filter",
+    "allTag": "All"
   },
   "live": {
     "title": "Live",
@@ -89,11 +113,17 @@
   },
   "about": {
     "title": "About",
-    "subtitle": "The story behind the channel"
+    "subtitle": "The story behind the channel",
+    "bio": [
+      "FAWZZ_TV is a French Twitch channel built around authenticity, community, and ambitious challenges. After 8 years of streaming, what started as a competitive FPS channel (Counter-Strike, Valorant) has grown into a space where gaming coexists with original IRL adventures.",
+      "The channel's defining trait is its relationship with its community. Rather than just watching, viewers actively shape the content through their decisions, interactions, and support.",
+      "The channel doesn't chase viral moments — it creates memorable adventures together, with an emphasis on human encounters, spontaneity, and storytelling."
+    ]
   },
   "footer": {
     "rights": "All rights reserved.",
-    "madeWith": "Made with"
+    "madeWith": "Made with",
+    "madeBy": "by the community"
   },
   "common": {
     "construction": "Site under construction"

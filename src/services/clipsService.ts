@@ -2,22 +2,22 @@ import type { ClipData } from '../data/clips';
 import { CLIPS as FALLBACK_CLIPS } from '../data/clips';
 
 export interface ClipFilters {
-  startedAt?: string; // ISO date string
-  endedAt?: string;   // ISO date string
+  startedAt?: string;
+  endedAt?: string;
+  sort?: 'views' | 'date';
 }
 
 /**
  * Fetch clips via the Vercel serverless function.
  * The `/api/clips` endpoint handles Twitch OAuth server-side —
  * no secrets are ever exposed to the browser.
- *
- * @param filters - Optional date range (started_at / ended_at)
  */
 export async function fetchClips(filters?: ClipFilters): Promise<ClipData[]> {
   const url = new URL('/api/clips', window.location.origin);
 
   if (filters?.startedAt) url.searchParams.set('started_at', filters.startedAt);
   if (filters?.endedAt) url.searchParams.set('ended_at', filters.endedAt);
+  if (filters?.sort) url.searchParams.set('sort', filters.sort);
 
   const res = await fetch(url.toString());
 
@@ -26,8 +26,6 @@ export async function fetchClips(filters?: ClipFilters): Promise<ClipData[]> {
     throw new Error(body.error || `API ${res.status}`);
   }
 
-  // If the response isn't valid JSON (e.g. local dev where API isn't running),
-  // throw a clean error instead of a raw JSON parse failure.
   const text = await res.text();
   try {
     return JSON.parse(text);

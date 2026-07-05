@@ -11,17 +11,20 @@ export default function Hero() {
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(145,70,255,0.15),transparent_70%)]" />
 
       <div className="relative z-10 text-center px-4 max-w-4xl mx-auto">
-        {/* Logo */}
+        {/* Avatar — rounded like Twitch profile */}
         <motion.div
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.8 }}
+          className="flex justify-center"
         >
-          <img
-            src="/assets/brand/logo.png"
-            alt="FAWZZ_TV"
-            className="h-20 md:h-28 w-auto mx-auto mb-6 drop-shadow-[0_0_40px_rgba(145,70,255,0.5)]"
-          />
+          <div className="h-20 w-20 md:h-28 md:w-28 rounded-full overflow-hidden border-2 border-twitch/40 shadow-lg shadow-twitch/20 mx-auto mb-6">
+            <img
+              src="/assets/brand/fawzz-subabike.jpg"
+              alt="FAWZZ_TV"
+              className="h-full w-full object-cover"
+            />
+          </div>
         </motion.div>
 
         {/* Brand name — the main attraction */}

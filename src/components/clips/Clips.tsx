@@ -3,27 +3,9 @@ import { useTranslation } from 'react-i18next';
 import { Search, SlidersHorizontal, AlertCircle, RefreshCw } from 'lucide-react';
 import ClipCard from './ClipCard';
 import { useClips } from '../../hooks/useClips';
+import { PROJECTS } from '../../data/adventures';
 import type { ClipFilters } from '../../services/clipsService';
 
-// ── Constants ────────────────────────────────────────────────────────────────
-
-/** Twitch game IDs */
-const GAME_IDS: Record<string, string> = {
-  'counter-strike': '32399',
-  'valorant': '516575',
-};
-
-/** Adventure date ranges for Périples à vélo filtering */
-const ADVENTURE_RANGES = [
-  { start: '2022-07-15', end: '2022-07-25' },
-  { start: '2023-06-02', end: '2023-06-15' },
-  { start: '2024-09-06', end: '2024-10-10' },
-];
-
-/** Keywords for Face caméra category */
-const FACE_CAM_KEYWORDS = ['face', 'cam', 'caméra', 'irl', 'just chatting'];
-
-type Category = 'all' | 'counter-strike' | 'valorant' | 'face-cam' | 'periples';
 type SortMode = 'views' | 'date';
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
@@ -32,17 +14,6 @@ function clipYear(iso: string): number | null {
   if (!iso) return null;
   const y = parseInt(iso.slice(0, 4), 10);
   return Number.isNaN(y) ? null : y;
-}
-
-function inAdventureRange(dateStr: string): boolean {
-  if (!dateStr) return false;
-  const d = dateStr.slice(0, 10);
-  return ADVENTURE_RANGES.some(r => d >= r.start && d <= r.end);
-}
-
-function matchesFaceCam(title: string): boolean {
-  const lower = title.toLowerCase();
-  return FACE_CAM_KEYWORDS.some(kw => lower.includes(kw));
 }
 
 // ── Skeleton ─────────────────────────────────────────────────────────────────
@@ -64,54 +35,39 @@ function SkeletonCard() {
 export default function Clips() {
   const { t } = useTranslation();
 
-  const [category, setCategory] = useState<Category>('all');
+  const [adventure, setAdventure] = useState<string>('all');
   const [year, setYear] = useState<string>('all');
   const [search, setSearch] = useState('');
   const [sort, setSort] = useState<SortMode>('views');
 
-  // Build API filters based on category
-  const apiFilters: ClipFilters = useMemo(() => {
+  // Build API filters — adventure date range or year range
+  const apiFilters: ClipFilters = useMemo((): ClipFilters => {
     const f: ClipFilters = { sort };
 
-    if (category === 'counter-strike' || category === 'valorant') {
-      f.gameId = GAME_IDS[category];
-    }
-
-    // Year filter → date range
-    if (year !== 'all') {
+    if (adventure !== 'all') {
+      const adv = PROJECTS.find(p => p.id === adventure);
+      if (adv?.dates?.start && adv?.dates?.end) {
+        f.startedAt = `${adv.dates.start}T00:00:00Z`;
+        f.endedAt = `${adv.dates.end}T23:59:59Z`;
+      }
+    } else if (year !== 'all') {
       f.startedAt = `${year}-01-01T00:00:00Z`;
       f.endedAt = `${year}-12-31T23:59:59Z`;
     }
 
     return f;
-  }, [category, year, sort]);
+  }, [adventure, year, sort]);
 
   const { clips, loading, error, retry } = useClips(apiFilters);
 
-  // Client-side filtering for categories that can't be expressed as API params
+  // Client-side search filter
   const filteredClips = useMemo(() => {
-    let result = clips;
+    if (!search.trim()) return clips;
+    const q = search.toLowerCase();
+    return clips.filter(c => c.title.toLowerCase().includes(q));
+  }, [clips, search]);
 
-    // Face caméra → keyword match
-    if (category === 'face-cam') {
-      result = result.filter(c => matchesFaceCam(c.title));
-    }
-
-    // Périples à vélo → adventure date range match
-    if (category === 'periples') {
-      result = result.filter(c => inAdventureRange(c.createdAt));
-    }
-
-    // Search → title match
-    if (search.trim()) {
-      const q = search.toLowerCase();
-      result = result.filter(c => c.title.toLowerCase().includes(q));
-    }
-
-    return result;
-  }, [clips, category, search]);
-
-  // Extract years for the dropdown
+  // Extract years from clips for dropdown
   const years = useMemo(() => {
     const set = new Set<number>();
     clips.forEach(c => {
@@ -121,6 +77,15 @@ export default function Clips() {
     return [...set].sort((a, b) => b - a);
   }, [clips]);
 
+  // Build adventure options from PROJECTS data
+  const adventureOptions = useMemo(() => {
+    const opts = PROJECTS.filter(p => !p.comingSoon && p.tKey && p.dates);
+    return opts.map(p => ({
+      id: p.id,
+      label: t(`${p.tKey}.title`, p.title),
+    }));
+  }, [t]);
+
   return (
     <section className="py-16 px-4 max-w-6xl mx-auto">
       {/* Header */}
@@ -129,30 +94,7 @@ export default function Clips() {
         <p className="text-gray-400 max-w-xl mx-auto">{t('clips.subtitle')}</p>
       </div>
 
-      {/* Category tabs */}
-      <div className="flex flex-wrap justify-center gap-2 mb-6">
-        {([
-          ['all', t('clips.categories.all')],
-          ['counter-strike', t('clips.categories.counterStrike')],
-          ['valorant', t('clips.categories.valorant')],
-          ['face-cam', t('clips.categories.faceCam')],
-          ['periples', t('clips.categories.periples')],
-        ] as [Category, string][]).map(([key, label]) => (
-          <button
-            key={key}
-            onClick={() => { setCategory(key); setYear('all'); setSearch(''); }}
-            className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
-              category === key
-                ? 'bg-twitch text-white shadow-md shadow-twitch/25'
-                : 'bg-gray-800 text-gray-400 hover:bg-gray-700 hover:text-gray-200'
-            }`}
-          >
-            {label}
-          </button>
-        ))}
-      </div>
-
-      {/* Search + Filters row */}
+      {/* Filters row */}
       <div className="flex flex-col sm:flex-row items-center gap-3 mb-8">
         {/* Search */}
         <div className="relative flex-1 w-full">
@@ -166,10 +108,22 @@ export default function Clips() {
           />
         </div>
 
+        {/* Adventure dropdown */}
+        <select
+          value={adventure}
+          onChange={e => { setAdventure(e.target.value); setYear('all'); }}
+          className="px-4 py-2.5 bg-gray-900 border border-gray-700 rounded-xl text-gray-300 text-sm focus:outline-none focus:border-twitch/50 cursor-pointer min-w-[160px]"
+        >
+          <option value="all">{t('clips.allAdventures')}</option>
+          {adventureOptions.map(opt => (
+            <option key={opt.id} value={opt.id}>{opt.label}</option>
+          ))}
+        </select>
+
         {/* Year dropdown */}
         <select
           value={year}
-          onChange={e => setYear(e.target.value)}
+          onChange={e => { setYear(e.target.value); setAdventure('all'); }}
           className="px-4 py-2.5 bg-gray-900 border border-gray-700 rounded-xl text-gray-300 text-sm focus:outline-none focus:border-twitch/50 cursor-pointer min-w-[100px]"
         >
           <option value="all">{t('clips.allYears')}</option>
@@ -193,7 +147,6 @@ export default function Clips() {
       {!loading && (
         <p className="text-gray-500 text-sm mb-4">
           {filteredClips.length} {t('clips.results')}
-          {category !== 'all' && ` · ${t(`clips.categories.${category}`)}`}
         </p>
       )}
 

@@ -25,14 +25,14 @@ export function useClips(filters?: ClipFilters): UseClipsResult {
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err);
       setError(message);
-      // Fall back to static data only when no date/game filters are applied
-      if (!filters?.startedAt && !filters?.endedAt && !filters?.gameId) {
+      // Fall back to static data only when no date filters are applied
+      if (!filters?.startedAt && !filters?.endedAt) {
         setClips(FALLBACK_CLIPS);
       }
     } finally {
       setLoading(false);
     }
-  }, [filters?.startedAt, filters?.endedAt, filters?.gameId, filters?.sort]);
+  }, [filters?.startedAt, filters?.endedAt, filters?.sort]);
 
   useEffect(() => {
     load();

@@ -94,13 +94,7 @@
     "allYears": "All years",
     "sortViews": "Most viewed",
     "sortDate": "Newest",
-    "categories": {
-      "all": "All",
-      "counterStrike": "Counter-Strike",
-      "valorant": "Valorant",
-      "faceCam": "Face cam",
-      "periples": "Bike trips"
-    }
+    "allAdventures": "All adventures"
   },
   "live": {
     "title": "Live",

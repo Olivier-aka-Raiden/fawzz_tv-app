@@ -94,7 +94,6 @@ export async function GET(request: Request): Promise<Response> {
   const url = new URL(request.url);
   const startedAt = url.searchParams.get('started_at') || undefined;
   const endedAt = url.searchParams.get('ended_at') || undefined;
-  const gameId = url.searchParams.get('game_id') || undefined;
   const sort = url.searchParams.get('sort') as 'views' | 'date' | undefined;
 
   try {
@@ -114,7 +113,6 @@ export async function GET(request: Request): Promise<Response> {
       if (cursor) params.set('after', cursor);
       if (startedAt) params.set('started_at', startedAt);
       if (endedAt) params.set('ended_at', endedAt);
-      if (gameId) params.set('game_id', gameId);
 
       const data = await twitchRequest<{
         data: TwitchClip[];

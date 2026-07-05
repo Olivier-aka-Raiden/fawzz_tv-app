@@ -4,7 +4,6 @@ import { CLIPS as FALLBACK_CLIPS } from '../data/clips';
 export interface ClipFilters {
   startedAt?: string;
   endedAt?: string;
-  gameId?: string;
   sort?: 'views' | 'date';
 }
 
@@ -18,7 +17,6 @@ export async function fetchClips(filters?: ClipFilters): Promise<ClipData[]> {
 
   if (filters?.startedAt) url.searchParams.set('started_at', filters.startedAt);
   if (filters?.endedAt) url.searchParams.set('ended_at', filters.endedAt);
-  if (filters?.gameId) url.searchParams.set('game_id', filters.gameId);
   if (filters?.sort) url.searchParams.set('sort', filters.sort);
 
   const res = await fetch(url.toString());

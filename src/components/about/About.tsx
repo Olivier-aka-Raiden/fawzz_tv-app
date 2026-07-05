@@ -39,83 +39,81 @@ export default function About() {
   const { t } = useTranslation();
 
   return (
-    <div>
-      {/* Hero — full-width portrait background */}
-      <section className="relative min-h-[75vh] sm:min-h-[85vh] flex items-center justify-center overflow-hidden">
-        {/* Portrait image — fills the section */}
-        <picture className="absolute inset-0">
-          <source srcSet="/assets/brand/fawzz-portrait-bg.jpg" media="(min-width: 1201px)" />
-          <source srcSet="/assets/brand/fawzz-portrait-bg-md.jpg" media="(min-width: 641px)" />
-          <img
-            src="/assets/brand/fawzz-portrait-bg-sm.jpg"
-            alt=""
-            className="w-full h-full object-cover object-center"
-            loading="eager"
-          />
-        </picture>
+    <section className="pt-24 pb-16 px-4 max-w-6xl mx-auto">
+      {/* Two-column layout: portrait left, content right */}
+      <div className="flex flex-col lg:flex-row items-center lg:items-start gap-10 lg:gap-16">
+        {/* Portrait — left side, full height visible */}
+        <motion.div
+          initial={{ opacity: 0, x: -30 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.6 }}
+          className="lg:w-2/5 shrink-0 flex justify-center lg:justify-end"
+        >
+          <picture>
+            <source srcSet="/assets/brand/fawzz-portrait-bg.jpg" media="(min-width: 1201px)" />
+            <source srcSet="/assets/brand/fawzz-portrait-bg-md.jpg" media="(min-width: 641px)" />
+            <img
+              src="/assets/brand/fawzz-portrait-bg-sm.jpg"
+              alt="Fawzz_tv"
+              className="w-64 sm:w-80 lg:w-full max-w-md rounded-2xl shadow-2xl shadow-black/50 object-cover object-top"
+              loading="eager"
+            />
+          </picture>
+        </motion.div>
 
-        {/* Gradient overlay — darkens bottom for text readability */}
-        <div className="absolute inset-0 bg-gradient-to-t from-gray-950 via-gray-950/60 to-gray-950/30" />
-
-        {/* Content overlaid on portrait */}
-        <div className="relative z-10 text-center px-4 max-w-3xl mx-auto">
-          <motion.h1
+        {/* Content — right side */}
+        <div className="lg:w-3/5 space-y-8">
+          <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="brand-text text-5xl sm:text-6xl md:text-7xl mb-4"
+            transition={{ delay: 0.15 }}
           >
-            FAWZZ_TV
-          </motion.h1>
+            <h1 className="brand-text text-4xl sm:text-5xl md:text-6xl mb-3">
+              FAWZZ_TV
+            </h1>
+            <p className="text-gray-400 text-lg">
+              {t('about.title')} — {t('about.subtitle')}
+            </p>
+          </motion.div>
 
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.2 }}
-            className="text-gray-400 text-lg sm:text-xl mb-8"
-          >
-            {t('about.title')} — {t('about.subtitle')}
-          </motion.p>
-
-          {/* Bio — semi-transparent card on top of portrait */}
+          {/* Bio */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
-            className="bg-gray-950/70 backdrop-blur-sm border border-gray-800/50 rounded-2xl p-6 sm:p-8 space-y-5 text-left"
+            className="bg-gray-900/80 border border-gray-800 rounded-2xl p-6 sm:p-8 space-y-5"
           >
             {(t('about.bio', { returnObjects: true }) as string[]).map((p, i) => (
               <p key={i} className="text-gray-300 leading-relaxed text-sm sm:text-base">{p}</p>
             ))}
           </motion.div>
+
+          {/* Social links */}
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5 }}
+            className="flex flex-wrap gap-3"
+          >
+            {SOCIALS.map(social => (
+              <a
+                key={social.label}
+                href={social.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`flex items-center gap-2 px-5 py-2.5 rounded-xl transition-colors border text-sm ${social.color}`}
+              >
+                <social.icon size={18} />
+                {social.label}
+              </a>
+            ))}
+          </motion.div>
+
+          <p className="text-gray-600 text-sm pt-4 border-t border-gray-800">
+            {t('footer.madeWith')} <Heart size={14} className="inline text-red-500" /> {t('footer.madeBy')}
+          </p>
         </div>
-      </section>
-
-      {/* Socials + footer — below the portrait */}
-      <section className="py-12 px-4 max-w-3xl mx-auto space-y-8">
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5 }}
-          className="flex flex-wrap justify-center gap-4"
-        >
-          {SOCIALS.map(social => (
-            <a
-              key={social.label}
-              href={social.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={`flex items-center gap-2 px-6 py-3 rounded-xl transition-colors border ${social.color}`}
-            >
-              <social.icon size={20} />
-              {social.label}
-            </a>
-          ))}
-        </motion.div>
-
-        <p className="text-center text-gray-600 text-sm">
-          {t('footer.madeWith')} <Heart size={14} className="inline text-red-500" /> {t('footer.madeBy')}
-        </p>
-      </section>
-    </div>
+      </div>
+    </section>
   );
 }

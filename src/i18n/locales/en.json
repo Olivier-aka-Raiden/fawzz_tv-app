@@ -21,6 +21,11 @@
     "overview": {
       "title": "The Routes",
       "subtitle": "Three adventures, one spectacular progression"
+    },
+    "teaser": {
+      "title": "And this is just the beginning",
+      "subtitle": "After France, Denmark and Malta, a new destination is on the horizon. SubaBike returns in 2026 to push the boundaries of community adventure even further.",
+      "cta": "See what's next"
     }
   },
   "adventures": {
@@ -36,6 +41,8 @@
     "relatedClipsComing": "Clips from this adventure will be available soon.",
     "timeline": "Timeline",
     "timelineSub": "The evolution of SubaBike adventures",
+    "comingSoonTeaser": "Details about this adventure will be revealed soon. Stay tuned!",
+    "comingSoonCta": "Follow the Twitch channel to catch the announcement.",
     "cards": {
       "2022": {
         "title": "Sochaux → Nice",

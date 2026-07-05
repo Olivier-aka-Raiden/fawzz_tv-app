@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Eye, Clock } from 'lucide-react';
+import { Eye, Clock, ImageOff } from 'lucide-react';
 import type { ClipData } from '../../data/clips';
 
 function formatViews(n: number): string {
@@ -17,6 +17,7 @@ function formatDuration(seconds: number): string {
 
 export default function ClipCard({ clip, index }: { clip: ClipData; index: number }) {
   const [playing, setPlaying] = useState(false);
+  const [imgError, setImgError] = useState(false);
 
   if (playing) {
     return (
@@ -41,7 +42,22 @@ export default function ClipCard({ clip, index }: { clip: ClipData; index: numbe
       onClick={() => setPlaying(true)}
     >
       <div className="aspect-video relative bg-gray-800">
-        <img src={clip.thumbnailUrl} alt={clip.title} className="w-full h-full object-cover" loading="lazy" />
+        {imgError ? (
+          <div className="w-full h-full flex items-center justify-center bg-gray-800">
+            <div className="text-center text-gray-600">
+              <ImageOff size={32} className="mx-auto mb-1" />
+              <span className="text-xs">Preview unavailable</span>
+            </div>
+          </div>
+        ) : (
+          <img
+            src={clip.thumbnailUrl}
+            alt={clip.title}
+            className="w-full h-full object-cover"
+            loading="lazy"
+            onError={() => setImgError(true)}
+          />
+        )}
         <div className="absolute inset-0 flex items-center justify-center bg-black/40 group-hover:bg-black/30 transition-colors">
           <div className="w-14 h-14 rounded-full bg-twitch/90 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
             <div className="w-0 h-0 border-t-[10px] border-t-transparent border-l-[18px] border-l-white border-b-[10px] border-b-transparent ml-1" />

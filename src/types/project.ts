@@ -8,4 +8,5 @@ export interface Project {
   dates?: { start: string; end: string };
   routeId?: string;
   highlights?: string[];
+  comingSoon?: boolean;
 }

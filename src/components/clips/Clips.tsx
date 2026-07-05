@@ -26,8 +26,8 @@ export default function Clips() {
         <p className="text-gray-400 max-w-xl mx-auto">{t('clips.subtitle')}</p>
       </div>
 
-      {/* Error banner */}
-      {error && (
+      {/* Error banner — only shown when no fallback data is available */}
+      {error && clips.length === 0 && (
         <div className="mb-6 flex items-center justify-between gap-3 bg-red-900/20 border border-red-800/40 rounded-xl px-5 py-3 text-red-400 text-sm">
           <div className="flex items-center gap-2">
             <AlertCircle size={16} />

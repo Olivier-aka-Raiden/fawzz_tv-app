@@ -8,6 +8,13 @@ import RouteMap from '../shared/RouteMap';
 import ClipCard from '../clips/ClipCard';
 import { useAdventureClips } from '../../hooks/useClips';
 
+const STAT_LABEL_KEYS: Record<string, string> = {
+  Distance: 'adventures.statsDistance',
+  'Durée': 'adventures.statsDuration',
+  Stream: 'adventures.statsStream',
+  Watch: 'adventures.statsWatch',
+};
+
 function formatDate(iso: string): string {
   return new Date(iso).toLocaleDateString(undefined, { day: 'numeric', month: 'long', year: 'numeric' });
 }
@@ -64,7 +71,9 @@ export default function AdventureDetail() {
               {project.stats.map(stat => (
                 <div key={stat.label} className="text-center">
                   <div className="text-2xl font-bold text-gray-600">???</div>
-                  <div className="text-xs text-gray-500 uppercase">{stat.label}</div>
+                  <div className="text-xs text-gray-500 uppercase">
+                    {t(STAT_LABEL_KEYS[stat.label] || stat.label, stat.label)}
+                  </div>
                 </div>
               ))}
             </div>
@@ -138,7 +147,7 @@ export default function AdventureDetail() {
           >
             <div className="text-2xl md:text-3xl font-bold text-white">{stat.value}</div>
             <div className="text-xs text-gray-500 mt-1.5 uppercase tracking-wider">
-              {t(`adventures.stats${stat.label.replace('é', 'e')}`, stat.label)}
+              {t(STAT_LABEL_KEYS[stat.label] || stat.label, stat.label)}
             </div>
           </div>
         ))}
@@ -288,7 +297,7 @@ export default function AdventureDetail() {
                           </span>
                         )}
                         {isCurrent && (
-                          <span className="text-[10px] text-twitch font-medium uppercase tracking-wider">Actuel</span>
+                          <span className="text-[10px] text-twitch font-medium uppercase tracking-wider">{t('adventures.current')}</span>
                         )}
                       </div>
                       <h3 className="text-lg font-bold text-white group-hover:text-twitch-glow transition-colors">
@@ -299,7 +308,7 @@ export default function AdventureDetail() {
                       </p>
                       <div className="flex gap-4 mt-3 text-xs text-gray-500">
                         {p.stats.slice(0, 2).map(s => (
-                          <span key={s.label}>{s.value} {s.label.toLowerCase()}</span>
+                          <span key={s.label}>{s.value} {t(STAT_LABEL_KEYS[s.label] || s.label, s.label).toLowerCase()}</span>
                         ))}
                       </div>
                     </Link>

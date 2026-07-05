@@ -69,22 +69,9 @@ export default function About() {
           transition={{ delay: 0.3 }}
           className="bg-gray-900 border border-gray-800 rounded-2xl p-8 space-y-6"
         >
-          <p>
-            FAWZZ_TV est une chaîne Twitch française construite autour de l'authenticité,
-            de la communauté et des défis ambitieux. Après 8 ans de streaming, ce qui a
-            commencé comme une chaîne FPS compétitive (Counter-Strike, Valorant) est
-            devenu un espace où le gaming coexiste avec des aventures IRL originales.
-          </p>
-          <p>
-            La caractéristique principale de la chaîne est la relation avec sa communauté.
-            Plutôt que de simplement regarder, les viewers façonnent activement le contenu
-            à travers leurs décisions, interactions et soutien.
-          </p>
-          <p>
-            La chaîne ne cherche pas les moments viraux — elle crée des aventures
-            mémorables ensemble, avec une emphase sur les rencontres humaines, la
-            spontanéité et le storytelling.
-          </p>
+          {(t('about.bio', { returnObjects: true }) as string[]).map((p, i) => (
+            <p key={i}>{p}</p>
+          ))}
         </motion.div>
 
         {/* Social links */}
@@ -109,7 +96,7 @@ export default function About() {
         </motion.div>
 
         <p className="text-center text-gray-600 text-sm">
-          {t('footer.madeWith')} <Heart size={14} className="inline text-red-500" /> par la communauté
+          {t('footer.madeWith')} <Heart size={14} className="inline text-red-500" /> {t('footer.madeBy')}
         </p>
       </div>
     </section>

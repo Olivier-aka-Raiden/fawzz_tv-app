@@ -80,7 +80,8 @@
         "description": "After France, Denmark, and Malta, a new destination is on the horizon. SubaBike returns in 2026 for an even more ambitious adventure — stay tuned for the reveal.",
         "badge": "2026 • Coming soon"
       }
-    }
+    },
+    "current": "Current"
   },
   "clips": {
     "title": "Clips",
@@ -117,11 +118,17 @@
   },
   "about": {
     "title": "About",
-    "subtitle": "The story behind the channel"
+    "subtitle": "The story behind the channel",
+    "bio": [
+      "FAWZZ_TV is a French Twitch channel built around authenticity, community, and ambitious challenges. After 8 years of streaming, what started as a competitive FPS channel (Counter-Strike, Valorant) has grown into a space where gaming coexists with original IRL adventures.",
+      "The channel's defining trait is its relationship with its community. Rather than just watching, viewers actively shape the content through their decisions, interactions, and support.",
+      "The channel doesn't chase viral moments — it creates memorable adventures together, with an emphasis on human encounters, spontaneity, and storytelling."
+    ]
   },
   "footer": {
     "rights": "All rights reserved.",
-    "madeWith": "Made with"
+    "madeWith": "Made with",
+    "madeBy": "by the community"
   },
   "common": {
     "construction": "Site under construction"

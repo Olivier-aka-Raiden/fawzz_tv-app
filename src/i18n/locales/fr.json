@@ -80,7 +80,8 @@
         "description": "Après la France, le Danemark, et Malte, une nouvelle destination se profile. Le format SubaBike revient en 2026 pour une aventure encore plus ambitieuse — la destination sera dévoilée prochainement. Restez connectés.",
         "badge": "2026 • À venir"
       }
-    }
+    },
+    "current": "Actuel"
   },
   "clips": {
     "title": "Clips",
@@ -117,11 +118,17 @@
   },
   "about": {
     "title": "À propos",
-    "subtitle": "L'histoire derrière la chaîne"
+    "subtitle": "L'histoire derrière la chaîne",
+    "bio": [
+      "FAWZZ_TV est une chaîne Twitch française construite autour de l'authenticité, de la communauté et des défis ambitieux. Après 8 ans de streaming, ce qui a commencé comme une chaîne FPS compétitive (Counter-Strike, Valorant) est devenu un espace où le gaming coexiste avec des aventures IRL originales.",
+      "La caractéristique principale de la chaîne est la relation avec sa communauté. Plutôt que de simplement regarder, les viewers façonnent activement le contenu à travers leurs décisions, interactions et soutien.",
+      "La chaîne ne cherche pas les moments viraux — elle crée des aventures mémorables ensemble, avec une emphase sur les rencontres humaines, la spontanéité et le storytelling."
+    ]
   },
   "footer": {
     "rights": "Tous droits réservés.",
-    "madeWith": "Fait avec"
+    "madeWith": "Fait avec",
+    "madeBy": "par la communauté"
   },
   "common": {
     "construction": "Site en construction"

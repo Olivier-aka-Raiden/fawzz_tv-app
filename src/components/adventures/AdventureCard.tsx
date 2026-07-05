@@ -21,7 +21,7 @@ export default function AdventureCard({ project, index }: { project: Project; in
       whileInView={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.1 }}
       viewport={{ once: true }}
-      className={`bg-gray-900 border rounded-2xl overflow-hidden transition-all p-6 flex flex-col h-full group ${
+      className={`bg-gray-900 border rounded-2xl overflow-hidden transition-all p-6 flex flex-col gap-4 h-full group ${
         project.comingSoon
           ? 'border-twitch/30 bg-gradient-to-br from-gray-900 via-gray-900 to-twitch/5 cursor-default'
           : 'border-gray-800 hover:border-gray-700 hover:bg-gray-900/80 cursor-pointer'

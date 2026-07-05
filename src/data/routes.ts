@@ -44,10 +44,10 @@ export const ROUTES: RouteData[] = [
   },
   {
     id: 'sochaux-denmark-2023',
-    name: 'Sochaux → Danemark',
+    name: 'Lille → Copenhague',
     year: 2023,
     color: '#3b82f6',
-    startLabel: 'Sochaux',
+    startLabel: 'Lille',
     endLabel: 'Copenhague',
     geojson: {
       type: 'FeatureCollection',
@@ -57,11 +57,12 @@ export const ROUTES: RouteData[] = [
         geometry: {
           type: 'LineString',
           coordinates: [
-            [6.8333, 47.5167],   // Sochaux
-            [7.7521, 48.5734],   // Strasbourg
-            [8.4037, 49.0069],   // Karlsruhe
-            [8.6821, 50.1109],   // Frankfurt
-            [9.7320, 52.3759],   // Hannover
+            [3.0573, 50.6292],   // Lille
+            [4.3517, 50.8503],   // Brussels
+            [4.4025, 51.2194],   // Antwerp
+            [4.9041, 52.3676],   // Amsterdam
+            [6.5665, 53.2194],   // Groningen
+            [8.8017, 53.0793],   // Bremen
             [9.9937, 53.5511],   // Hamburg
             [11.1833, 54.4333],  // Fehmarn (Puttgarden) ⛴
             [11.3833, 54.6667],  // Rødbyhavn ⛴

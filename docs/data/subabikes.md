@@ -28,11 +28,11 @@
 
 ---
 
-# 2023 • Sochaux → Denmark
+# 2023 • Lille → Copenhagen
 
 ## Route
-- **Departure:** Sochaux, France
-- **Arrival:** Denmark
+- **Departure:** Lille, France
+- **Arrival:** Copenhagen, Denmark
 
 ## Duration
 - **2 June 2023 → 15 June 2023**
@@ -47,7 +47,7 @@
 
 ## Highlight
 
-> A European crossing that confirmed long-distance self-sufficiency.
+> From Lille through Amsterdam, then by boat to Copenhagen — a European crossing that confirmed long-distance self-sufficiency.
 
 ---
 
@@ -89,7 +89,7 @@
 | Year | Adventure |  Distance | Stream Time | Watch Hours |
 |------|-----------|----------:|------------:|------------:|
 | **2022** | Sochaux → Nice |  ≈1000 km | 110 h | 21.2K |
-| **2023** | Sochaux → Denmark | ≈1,000 km | 156 h | 7.9K |
+| **2023** | Lille → Copenhagen | ≈1,000 km | 156 h | 7.9K |
 | **2024** | Sochaux → Malta | ≈1,800 km | 286 h | 64K |
 
 ---

@@ -25,16 +25,17 @@ export const PROJECTS: Project[] = [
   {
     id: 'sochaux-denmark-2023',
     tKey: 'adventures.cards.2023',
-    title: 'Sochaux → Danemark',
-    subtitle: "Première traversée européenne en autonomie",
-    description: "Une expédition de 13 jours jusqu'à Copenhague. Ferry à Fehmarn (Allemagne) vers Rødbyhavn (Danemark), puis route vers la capitale danoise.",
+    title: 'Lille → Copenhague',
+    subtitle: 'De Lille à Amsterdam, puis cap sur le Danemark',
+    description: "De Lille à Copenhague en 13 jours. Passage par Amsterdam, puis traversée en bateau vers le Danemark et route jusqu'à la capitale danoise.",
     badge: '2023',
     dates: { start: '2023-06-02', end: '2023-06-15' },
     routeId: 'sochaux-denmark-2023',
     highlights: [
-      "Passage de 4 pays : France, Allemagne, Danemark",
-      "Traversée en ferry Fehmarn → Rødbyhavn",
-      "1 000 km en autonomie complète",
+      "Départ de Lille, passage par la Belgique et les Pays-Bas",
+      "Arrêt à Amsterdam, puis direction la mer",
+      "Traversée en bateau vers le Danemark",
+      "Arrivée à Copenhague après 1 000 km",
     ],
     stats: [
       { label: 'Distance', value: '1 000 km' },

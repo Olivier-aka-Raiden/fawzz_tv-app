@@ -1,9 +1,20 @@
+import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { Clock } from 'lucide-react';
 import type { Project } from '../../types/project';
 
+const STAT_LABEL_KEYS: Record<string, string> = {
+  Distance: 'adventures.statsDistance',
+  Durée: 'adventures.statsDuration',
+  Stream: 'adventures.statsStream',
+  Watch: 'adventures.statsWatch',
+};
+
 export default function AdventureCard({ project, index }: { project: Project; index: number }) {
+  const { t } = useTranslation();
+  const tk = (suffix: string) => project.tKey ? t(`${project.tKey}.${suffix}`, project[suffix as keyof Project] as string) : (project as any)[suffix];
+
   const card = (
     <motion.article
       initial={{ opacity: 0, y: 20 }}
@@ -24,18 +35,14 @@ export default function AdventureCard({ project, index }: { project: Project; in
               : 'bg-twitch/20 text-twitch'
           }`}
         >
-          {project.badge}
+          {project.tKey ? t(`${project.tKey}.badge`, project.badge) : project.badge}
         </span>
       )}
-      <h3 className={`text-xl font-bold transition-colors ${
-        project.comingSoon
-          ? 'text-white group-hover:text-twitch-glow'
-          : 'text-white group-hover:text-twitch-glow'
-      }`}>
-        {project.title}
+      <h3 className="text-xl font-bold text-white group-hover:text-twitch-glow transition-colors">
+        {tk('title')}
       </h3>
-      <p className="text-gray-500 text-sm">{project.subtitle}</p>
-      <p className="text-gray-400 text-sm leading-relaxed">{project.description}</p>
+      <p className="text-gray-500 text-sm">{tk('subtitle')}</p>
+      <p className="text-gray-400 text-sm leading-relaxed">{tk('description')}</p>
       <div className="grid grid-cols-2 gap-3 pt-2 border-t border-gray-800">
         {project.stats.map(stat => (
           <div key={stat.label}>
@@ -43,13 +50,15 @@ export default function AdventureCard({ project, index }: { project: Project; in
               {project.comingSoon && stat.value === '???' ? (
                 <span className="inline-flex items-center gap-1.5">
                   <Clock size={14} className="text-twitch/50" />
-                  <span className="text-gray-600 text-sm font-normal">Bientôt</span>
+                  <span className="text-gray-600 text-sm font-normal">{t('adventures.comingSoon')}</span>
                 </span>
               ) : (
                 stat.value
               )}
             </div>
-            <div className="text-xs text-gray-500">{stat.label}</div>
+            <div className="text-xs text-gray-500">
+              {t(STAT_LABEL_KEYS[stat.label] || stat.label, stat.label)}
+            </div>
           </div>
         ))}
       </div>
@@ -57,7 +66,7 @@ export default function AdventureCard({ project, index }: { project: Project; in
       {project.comingSoon && (
         <div className="absolute top-4 right-4">
           <span className="text-[10px] font-bold uppercase tracking-widest text-twitch/60 animate-pulse">
-            Bientôt
+            {t('adventures.comingSoon')}
           </span>
         </div>
       )}

@@ -3,6 +3,7 @@ import type { Project } from '../types/project';
 export const PROJECTS: Project[] = [
   {
     id: 'sochaux-nice-2022',
+    tKey: 'adventures.cards.2022',
     title: 'Sochaux → Nice',
     subtitle: 'La première traversée de la France à vélo',
     description: "Première grande aventure cycliste en direct sur Twitch. 11 jours pour relier Sochaux à la Méditerranée, posant les bases de ce qui allait devenir une série de voyages communautaires.",
@@ -23,6 +24,7 @@ export const PROJECTS: Project[] = [
   },
   {
     id: 'sochaux-denmark-2023',
+    tKey: 'adventures.cards.2023',
     title: 'Sochaux → Danemark',
     subtitle: "Première traversée européenne en autonomie",
     description: "Une expédition de 13 jours jusqu'à Copenhague. Ferry à Fehmarn (Allemagne) vers Rødbyhavn (Danemark), puis route vers la capitale danoise.",
@@ -43,6 +45,7 @@ export const PROJECTS: Project[] = [
   },
   {
     id: 'sochaux-malta-2024',
+    tKey: 'adventures.cards.2024',
     title: 'Sochaux → Malte',
     subtitle: 'Le premier SubaBike — les subs ajoutent des kilomètres',
     description: "2 700 km à travers la France et l'Italie. De Sochaux à la Côte d'Azur, détour par Sète, Béziers et Narbonne, passage par Monaco et la Riviera italienne (Savona, Gênes, La Spezia), ferry à Civitavecchia pour la Sicile (Trapani, Sciacca), puis Pozzallo → Malte.",
@@ -66,6 +69,7 @@ export const PROJECTS: Project[] = [
   },
   {
     id: 'subabike-2026',
+    tKey: 'adventures.cards.2026',
     title: 'SubaBike 2026',
     subtitle: 'La prochaine aventure se prépare…',
     description: "Après la France, le Danemark, et Malte, une nouvelle destination se profile. Le format SubaBike revient en 2026 pour une aventure encore plus ambitieuse — la destination sera dévoilée prochainement. Restez connectés.",

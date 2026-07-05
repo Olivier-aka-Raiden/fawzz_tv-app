@@ -17,6 +17,7 @@ export default function AdventureDetail() {
   const { t } = useTranslation();
 
   const project = PROJECTS.find(p => p.id === id);
+  const tk = (suffix: string) => project?.tKey ? t(`${project.tKey}.${suffix}`, (project as any)[suffix]) : (project as any)?.[suffix];
 
   if (!project) {
     return (
@@ -51,11 +52,11 @@ export default function AdventureDetail() {
 
           {project.badge && (
             <span className="inline-block text-xs font-semibold px-2.5 py-0.5 bg-twitch/10 text-twitch-glow border border-twitch/30 rounded-full mb-4">
-              {project.badge}
+              {project.tKey ? t(`${project.tKey}.badge`, project.badge) : project.badge}
             </span>
           )}
-          <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">{project.title}</h1>
-          <p className="text-gray-400 text-lg max-w-2xl mx-auto leading-relaxed mb-8">{project.description}</p>
+          <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">{tk('title')}</h1>
+          <p className="text-gray-400 text-lg max-w-2xl mx-auto leading-relaxed mb-8">{tk('description')}</p>
 
           <div className="max-w-md mx-auto bg-gray-900 border border-gray-800 rounded-2xl p-6">
             <p className="text-gray-500 text-sm mb-4">{t('adventures.comingSoonTeaser')}</p>
@@ -101,11 +102,11 @@ export default function AdventureDetail() {
       >
         {project.badge && (
           <span className="inline-block text-xs font-semibold px-2.5 py-0.5 bg-twitch/20 text-twitch rounded-full mb-4">
-            {project.badge}
+            {project.tKey ? t(`${project.tKey}.badge`, project.badge) : project.badge}
           </span>
         )}
-        <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">{project.title}</h1>
-        <p className="text-gray-400 text-lg max-w-3xl leading-relaxed">{project.description}</p>
+        <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">{tk('title')}</h1>
+        <p className="text-gray-400 text-lg max-w-3xl leading-relaxed">{tk('description')}</p>
       </motion.div>
 
       {/* Dates */}
@@ -136,7 +137,9 @@ export default function AdventureDetail() {
             className="bg-gray-900 border border-gray-800 rounded-xl p-5 text-center hover:border-gray-700 transition-colors"
           >
             <div className="text-2xl md:text-3xl font-bold text-white">{stat.value}</div>
-            <div className="text-xs text-gray-500 mt-1.5 uppercase tracking-wider">{stat.label}</div>
+            <div className="text-xs text-gray-500 mt-1.5 uppercase tracking-wider">
+              {t(`adventures.stats${stat.label.replace('é', 'e')}`, stat.label)}
+            </div>
           </div>
         ))}
       </motion.div>
@@ -168,18 +171,8 @@ export default function AdventureDetail() {
         >
           <h2 className="text-xl font-bold text-white mb-4">{t('adventures.story')}</h2>
           <div className="text-gray-400 leading-relaxed space-y-4">
-            <p>{project.description}</p>
-            <p>
-              {project.id === 'sochaux-nice-2022' && (
-                "En juillet 2022, Fawzz_tv se lance dans son premier grand défi IRL : traverser la France à vélo, de Sochaux à Nice, en streamant l'intégralité du parcours en direct sur Twitch. L'équipement était minimal, l'organisation artisanale — mais l'énergie de la communauté était au rendez-vous. L'arrivée sur la Méditerranée a marqué la naissance d'un nouveau format sur la chaîne."
-              )}
-              {project.id === 'sochaux-denmark-2023' && (
-                "Forte du succès de la première édition, l'aventure 2023 voit plus grand : une traversée européenne jusqu'au Danemark. Avec 1 000 km au compteur et 4 pays traversés, cette édition a confirmé que le format longue distance en autonomie était viable — et que la communauté était prête à suivre sur la durée."
-              )}
-              {project.id === 'sochaux-malta-2024' && (
-                "L'édition 2024 a tout changé avec l'introduction du format SubaBike : chaque abonnement ajoute des kilomètres au parcours. Un donateur a fait exploser le compteur en ajoutant 1 700 km d'un coup. Résultat : 34 jours de stream, 5 pays traversés, et une aventure dont la communauté a littéralement écrit le scénario en temps réel."
-              )}
-            </p>
+            <p>{tk('description')}</p>
+            <p>{t(`${project.tKey}.story`, '')}</p>
           </div>
         </motion.div>
 
@@ -291,7 +284,7 @@ export default function AdventureDetail() {
                       <div className="flex items-center gap-2 mb-2">
                         {p.badge && (
                           <span className="text-xs font-semibold px-2 py-0.5 bg-twitch/20 text-twitch rounded-full">
-                            {p.badge}
+                            {p.tKey ? t(`${p.tKey}.badge`, p.badge) : p.badge}
                           </span>
                         )}
                         {isCurrent && (
@@ -299,9 +292,11 @@ export default function AdventureDetail() {
                         )}
                       </div>
                       <h3 className="text-lg font-bold text-white group-hover:text-twitch-glow transition-colors">
-                        {p.title}
+                        {p.tKey ? t(`${p.tKey}.title`, p.title) : p.title}
                       </h3>
-                      <p className="text-sm text-gray-500 mt-1 line-clamp-2">{p.subtitle}</p>
+                      <p className="text-sm text-gray-500 mt-1 line-clamp-2">
+                        {p.tKey ? t(`${p.tKey}.subtitle`, p.subtitle) : p.subtitle}
+                      </p>
                       <div className="flex gap-4 mt-3 text-xs text-gray-500">
                         {p.stats.slice(0, 2).map(s => (
                           <span key={s.label}>{s.value} {s.label.toLowerCase()}</span>

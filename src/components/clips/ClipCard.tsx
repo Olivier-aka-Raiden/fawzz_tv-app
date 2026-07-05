@@ -22,7 +22,7 @@ export default function ClipCard({ clip, index }: { clip: ClipData; index: numbe
     return (
       <div className="aspect-video bg-black rounded-xl overflow-hidden">
         <iframe
-          src={`https://clips.twitch.tv/embed?clip=${clip.id}&parent=localhost&parent=fawzz-tv.vercel.app&autoplay=true`}
+          src={`https://clips.twitch.tv/embed?clip=${clip.id}&parent=localhost&parent=${window.location.hostname}&autoplay=true`}
           title={clip.title}
           className="w-full h-full"
           allowFullScreen

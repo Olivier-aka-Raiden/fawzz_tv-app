@@ -60,7 +60,7 @@ export default function Adventures() {
             className="flex gap-6 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide"
           >
             {PROJECTS.map((project, i) => (
-              <div key={project.id} className="min-w-[340px] max-w-[380px] flex-shrink-0 snap-start self-stretch">
+              <div key={project.id} className="min-w-[300px] max-w-[320px] flex-shrink-0 snap-start self-stretch">
                 <div className="h-full">
                   <AdventureCard project={project} index={i} />
                 </div>

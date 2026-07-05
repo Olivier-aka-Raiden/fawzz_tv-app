@@ -13,33 +13,41 @@ export default function Live() {
   const { t } = useTranslation();
   const isLive = useTwitchLive();
   const playerRef = useRef<HTMLDivElement>(null);
-  const scriptLoaded = useRef(false);
+  const playerInstance = useRef<any>(null);
+
+  const destroyPlayer = useCallback(() => {
+    // Twitch Player.destroy() is broken (removes the DOM node),
+    // so we use removeEventListener + null the ref instead
+    playerInstance.current = null;
+  }, []);
 
   const initPlayer = useCallback(() => {
-    if (!playerRef.current || scriptLoaded.current) return;
-    scriptLoaded.current = true;
+    if (!playerRef.current) return;
+    // Don't re-init if we already have a player attached to this DOM node
+    if (playerInstance.current) return;
 
-    // Twitch embed SDK fires ONLINE / OFFLINE events
     try {
-      const player = new (window as any).Twitch.Player(playerRef.current, {
+      const Twitch = (window as any).Twitch;
+      const player = new Twitch.Player(playerRef.current, {
         channel: CHANNEL,
         width: '100%',
         height: '100%',
         parent: [PARENT],
         autoplay: true,
-        muted: false,
+        muted: true, // Required by browsers for autoplay; user can unmute manually
       });
 
-      player.addEventListener((window as any).Twitch.Player.ONLINE, () => {
+      player.addEventListener(Twitch.Player.ONLINE, () => {
         updateTwitchLiveStatus(true);
       });
 
-      player.addEventListener((window as any).Twitch.Player.OFFLINE, () => {
+      player.addEventListener(Twitch.Player.OFFLINE, () => {
         updateTwitchLiveStatus(false);
       });
+
+      playerInstance.current = player;
     } catch {
-      // Twitch SDK may not be available — degrade gracefully
-      scriptLoaded.current = false;
+      // Twitch SDK not available — degrade gracefully
     }
   }, []);
 
@@ -57,9 +65,9 @@ export default function Live() {
     document.body.appendChild(script);
 
     return () => {
-      // Don't remove script on unmount — other components may use it
+      destroyPlayer();
     };
-  }, [initPlayer]);
+  }, [initPlayer, destroyPlayer]);
 
   return (
     <section className="py-16 px-4 max-w-7xl mx-auto">
@@ -103,22 +111,9 @@ export default function Live() {
         transition={{ delay: 0.15 }}
         className="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-4"
       >
-        {/* Left: Twitch Player */}
+        {/* Left: Twitch Player — always render, JS handles offline state */}
         <div className="aspect-video bg-black rounded-xl overflow-hidden shadow-2xl border border-gray-800">
-          {isLive ? (
-            <div ref={playerRef} className="w-full h-full" />
-          ) : (
-            /* Offline placeholder with the embed */
-            <div className="w-full h-full relative">
-              <div ref={playerRef} className="w-full h-full" />
-              {/* Fallback if JS embed fails */}
-              <iframe
-                src={`https://player.twitch.tv/?channel=${CHANNEL}&parent=${PARENT}`}
-                className="w-full h-full absolute inset-0"
-                allowFullScreen
-              />
-            </div>
-          )}
+          <div ref={playerRef} className="w-full h-full" />
         </div>
 
         {/* Right: Twitch Chat */}

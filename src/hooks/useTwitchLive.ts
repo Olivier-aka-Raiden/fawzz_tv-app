@@ -20,24 +20,15 @@ function getSnapshot() {
   return _isLive;
 }
 
-/** Poll the Twitch Helix API to check if the channel is live. */
+/** Poll the /api/live-status serverless function (server-side Twitch call, no CORS). */
 async function checkLiveStatus(): Promise<void> {
   try {
-    const tokenRes = await fetch('/api/twitch-token');
-    if (!tokenRes.ok) return;
-    const { token, clientId } = await tokenRes.json();
-
-    const streamRes = await fetch(
-      `https://api.twitch.tv/helix/streams?user_login=fawzz_tv`,
-      {
-        headers: { 'Client-ID': clientId, Authorization: `Bearer ${token}` },
-      },
-    );
-    if (!streamRes.ok) return;
-    const data = await streamRes.json();
-    setLive((data?.data?.length ?? 0) > 0);
+    const res = await fetch('/api/live-status');
+    if (!res.ok) return;
+    const data = await res.json();
+    setLive(data.live === true);
   } catch {
-    // Silently ignore — Twitch API may be unavailable
+    // Silently ignore — API may be temporarily unavailable
   }
 }
 

@@ -101,14 +101,14 @@ export async function GET(request: Request): Promise<Response> {
     const users = await twitchRequest<{ data: { id: string }[] }>(`users?login=${CHANNEL}`);
     const broadcasterId = users.data[0].id;
 
-    // Fetch clips (3 pages, 60 clips max)
+    // Fetch clips (10 pages of 100 = up to 1000 clips, Twitch max)
     const allClips: ClipData[] = [];
     let cursor: string | undefined;
 
-    for (let page = 0; page < 3; page++) {
+    for (let page = 0; page < 10; page++) {
       const params = new URLSearchParams({
         broadcaster_id: broadcasterId,
-        first: '20',
+        first: '100',
       });
       if (cursor) params.set('after', cursor);
       if (startedAt) params.set('started_at', startedAt);

@@ -39,7 +39,7 @@ export default function About() {
   const { t } = useTranslation();
 
   return (
-    <section className="pt-24 pb-16 px-4 max-w-6xl mx-auto">
+    <section className="pt-20 pb-16 px-4 max-w-6xl mx-auto">
       {/* Header: portrait left, title right — same width as bio card */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -49,10 +49,9 @@ export default function About() {
         {/* Portrait — left */}
         <div className="md:w-2/5 shrink-0 flex justify-center">
           <picture>
-            <source srcSet="/assets/brand/fawzz-portrait-bg.jpg" media="(min-width: 1201px)" />
-            <source srcSet="/assets/brand/fawzz-portrait-bg-md.jpg" media="(min-width: 641px)" />
+            <source srcSet="/assets/brand/fawzz-portrait-bg.webp" media="(min-width: 641px)" />
             <img
-              src="/assets/brand/fawzz-portrait-bg-sm.jpg"
+              src="/assets/brand/fawzz-portrait-bg-sm.webp"
               alt="Fawzz_tv"
               className="w-56 sm:w-72 md:w-full max-w-xs rounded-2xl shadow-2xl shadow-black/40 object-cover object-top"
               loading="eager"

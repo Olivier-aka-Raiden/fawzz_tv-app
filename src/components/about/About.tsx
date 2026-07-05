@@ -39,24 +39,28 @@ export default function About() {
   const { t } = useTranslation();
 
   return (
-    <section className="pt-20 pb-16 px-4 max-w-6xl mx-auto">
+    <section className="pt-16 pb-16 px-4 max-w-6xl mx-auto">
       {/* Header: portrait left, title right — same width as bio card */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="max-w-3xl mx-auto flex flex-col md:flex-row items-center gap-6 md:gap-10 mb-14"
+        className="max-w-3xl mx-auto flex flex-col md:flex-row items-center gap-6 md:gap-10 mb-10"
       >
         {/* Portrait — left */}
         <div className="md:w-2/5 shrink-0 flex justify-center">
-          <picture>
-            <source srcSet="/assets/brand/fawzz-portrait-bg.webp" media="(min-width: 641px)" />
-            <img
-              src="/assets/brand/fawzz-portrait-bg-sm.webp"
-              alt="Fawzz_tv"
-              className="w-56 sm:w-72 md:w-full max-w-xs rounded-2xl shadow-2xl shadow-black/40 object-cover object-top"
-              loading="eager"
-            />
-          </picture>
+          <div className="relative">
+            <picture>
+              <source srcSet="/assets/brand/fawzz-portrait-bg.webp" media="(min-width: 641px)" />
+              <img
+                src="/assets/brand/fawzz-portrait-bg-sm.webp"
+                alt="Fawzz_tv"
+                className="w-48 sm:w-64 md:w-full max-w-xs rounded-2xl shadow-2xl shadow-black/40 object-cover object-top"
+                loading="eager"
+              />
+            </picture>
+            {/* Fade to transparent at bottom */}
+            <div className="absolute bottom-0 left-0 right-0 h-24 rounded-b-2xl bg-gradient-to-t from-gray-950 to-transparent pointer-events-none" />
+          </div>
         </div>
 
         {/* Title — right */}

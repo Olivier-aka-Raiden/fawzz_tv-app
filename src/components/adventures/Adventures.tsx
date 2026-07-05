@@ -6,9 +6,9 @@ export default function Adventures() {
   const { t } = useTranslation();
 
   return (
-    <section className="py-16 px-4 max-w-[90rem] mx-auto">
-      <div className="text-center mb-12">
-        <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">{t('adventures.title')}</h1>
+    <section className="py-24 px-4 max-w-[90rem] mx-auto">
+      <div className="text-center mb-16">
+        <h1 className="text-4xl md:text-5xl font-bold text-white mb-6">{t('adventures.title')}</h1>
         <p className="text-gray-400 max-w-xl mx-auto">{t('adventures.subtitle')}</p>
       </div>
 

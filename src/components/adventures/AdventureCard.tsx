@@ -74,11 +74,11 @@ export default function AdventureCard({ project, index }: { project: Project; in
   );
 
   if (project.comingSoon) {
-    return <div className="block relative">{card}</div>;
+    return <div className="h-full relative">{card}</div>;
   }
 
   return (
-    <Link to={`/aventures/${project.id}`} className="block group">
+    <Link to={`/aventures/${project.id}`} className="block h-full group">
       {card}
     </Link>
   );

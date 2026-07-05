@@ -8,14 +8,6 @@ import type { ClipFilters } from '../../services/clipsService';
 
 type SortMode = 'views' | 'date';
 
-// ── Helpers ──────────────────────────────────────────────────────────────────
-
-function clipYear(iso: string): number | null {
-  if (!iso) return null;
-  const y = parseInt(iso.slice(0, 4), 10);
-  return Number.isNaN(y) ? null : y;
-}
-
 // ── Skeleton ─────────────────────────────────────────────────────────────────
 
 function SkeletonCard() {
@@ -30,13 +22,20 @@ function SkeletonCard() {
   );
 }
 
+// ── Constants ────────────────────────────────────────────────────────────────
+
+const YEARS = ['2020', '2021', '2022', '2023', '2024', '2025', '2026'];
+
+const ADVENTURES = PROJECTS.filter(p => !p.comingSoon && p.dates);
+
+type FilterValue = { type: 'all' } | { type: 'year'; year: string } | { type: 'adventure'; id: string };
+
 // ── Component ────────────────────────────────────────────────────────────────
 
 export default function Clips() {
   const { t } = useTranslation();
 
-  const [adventure, setAdventure] = useState<string>('all');
-  const [year, setYear] = useState<string>('all');
+  const [filter, setFilter] = useState<FilterValue>({ type: 'all' });
   const [search, setSearch] = useState('');
   const [sort, setSort] = useState<SortMode>('views');
 
@@ -44,19 +43,19 @@ export default function Clips() {
   const apiFilters: ClipFilters = useMemo((): ClipFilters => {
     const f: ClipFilters = { sort };
 
-    if (adventure !== 'all') {
-      const adv = PROJECTS.find(p => p.id === adventure);
+    if (filter.type === 'adventure') {
+      const adv = ADVENTURES.find(p => p.id === filter.id);
       if (adv?.dates?.start && adv?.dates?.end) {
         f.startedAt = `${adv.dates.start}T00:00:00Z`;
         f.endedAt = `${adv.dates.end}T23:59:59Z`;
       }
-    } else if (year !== 'all') {
-      f.startedAt = `${year}-01-01T00:00:00Z`;
-      f.endedAt = `${year}-12-31T23:59:59Z`;
+    } else if (filter.type === 'year') {
+      f.startedAt = `${filter.year}-01-01T00:00:00Z`;
+      f.endedAt = `${filter.year}-12-31T23:59:59Z`;
     }
 
     return f;
-  }, [adventure, year, sort]);
+  }, [filter, sort]);
 
   const { clips, loading, error, retry } = useClips(apiFilters);
 
@@ -67,20 +66,9 @@ export default function Clips() {
     return clips.filter(c => c.title.toLowerCase().includes(q));
   }, [clips, search]);
 
-  // Extract years from clips for dropdown
-  const years = useMemo(() => {
-    const set = new Set<number>();
-    clips.forEach(c => {
-      const y = clipYear(c.createdAt);
-      if (y) set.add(y);
-    });
-    return [...set].sort((a, b) => b - a);
-  }, [clips]);
-
-  // Build adventure options from PROJECTS data
+  // Build adventure option labels from i18n
   const adventureOptions = useMemo(() => {
-    const opts = PROJECTS.filter(p => !p.comingSoon && p.tKey && p.dates);
-    return opts.map(p => ({
+    return ADVENTURES.map(p => ({
       id: p.id,
       label: t(`${p.tKey}.title`, p.title),
     }));
@@ -94,9 +82,8 @@ export default function Clips() {
         <p className="text-gray-400 max-w-xl mx-auto">{t('clips.subtitle')}</p>
       </div>
 
-      {/* Filters row */}
-      <div className="flex flex-col sm:flex-row items-center gap-3 mb-8">
-        {/* Search */}
+      {/* Search + Sort row */}
+      <div className="flex flex-col sm:flex-row items-center gap-3 mb-6">
         <div className="relative flex-1 w-full">
           <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" />
           <input
@@ -108,39 +95,64 @@ export default function Clips() {
           />
         </div>
 
-        {/* Adventure dropdown */}
-        <select
-          value={adventure}
-          onChange={e => { setAdventure(e.target.value); setYear('all'); }}
-          className="px-4 py-2.5 bg-gray-900 border border-gray-700 rounded-xl text-gray-300 text-sm focus:outline-none focus:border-twitch/50 cursor-pointer min-w-[160px]"
-        >
-          <option value="all">{t('clips.allAdventures')}</option>
-          {adventureOptions.map(opt => (
-            <option key={opt.id} value={opt.id}>{opt.label}</option>
-          ))}
-        </select>
-
-        {/* Year dropdown */}
-        <select
-          value={year}
-          onChange={e => { setYear(e.target.value); setAdventure('all'); }}
-          className="px-4 py-2.5 bg-gray-900 border border-gray-700 rounded-xl text-gray-300 text-sm focus:outline-none focus:border-twitch/50 cursor-pointer min-w-[100px]"
-        >
-          <option value="all">{t('clips.allYears')}</option>
-          {years.map(y => (
-            <option key={y} value={String(y)}>{y}</option>
-          ))}
-        </select>
-
-        {/* Sort dropdown */}
         <select
           value={sort}
           onChange={e => setSort(e.target.value as SortMode)}
-          className="px-4 py-2.5 bg-gray-900 border border-gray-700 rounded-xl text-gray-300 text-sm focus:outline-none focus:border-twitch/50 cursor-pointer min-w-[130px]"
+          className="px-4 py-2.5 bg-gray-900 border border-gray-700 rounded-xl text-gray-300 text-sm focus:outline-none focus:border-twitch/50 cursor-pointer min-w-[140px]"
         >
           <option value="views">{t('clips.sortViews')}</option>
           <option value="date">{t('clips.sortDate')}</option>
         </select>
+      </div>
+
+      {/* Filter tags — single selection */}
+      <div className="flex flex-wrap items-center gap-2 mb-8">
+        <span className="text-xs text-gray-500 uppercase tracking-wider mr-1">{t('clips.filterBy')}</span>
+
+        {/* All */}
+        <button
+          onClick={() => setFilter({ type: 'all' })}
+          className={`px-3.5 py-1.5 rounded-full text-sm font-medium transition-all ${
+            filter.type === 'all'
+              ? 'bg-twitch text-white shadow-sm shadow-twitch/30'
+              : 'bg-gray-800 text-gray-400 hover:bg-gray-700 hover:text-gray-200'
+          }`}
+        >
+          {t('clips.allTag')}
+        </button>
+
+        {/* Years */}
+        {YEARS.map(y => (
+          <button
+            key={y}
+            onClick={() => setFilter({ type: 'year', year: y })}
+            className={`px-3.5 py-1.5 rounded-full text-sm font-medium transition-all ${
+              filter.type === 'year' && filter.year === y
+                ? 'bg-twitch text-white shadow-sm shadow-twitch/30'
+                : 'bg-gray-800 text-gray-400 hover:bg-gray-700 hover:text-gray-200'
+            }`}
+          >
+            {y}
+          </button>
+        ))}
+
+        {/* Divider */}
+        <span className="w-px h-5 bg-gray-700 mx-1 hidden sm:block" />
+
+        {/* Adventures */}
+        {adventureOptions.map(opt => (
+          <button
+            key={opt.id}
+            onClick={() => setFilter({ type: 'adventure', id: opt.id })}
+            className={`px-3.5 py-1.5 rounded-full text-sm font-medium transition-all ${
+              filter.type === 'adventure' && filter.id === opt.id
+                ? 'bg-twitch text-white shadow-sm shadow-twitch/30'
+                : 'bg-gray-800 text-gray-400 hover:bg-gray-700 hover:text-gray-200'
+            }`}
+          >
+            {opt.label}
+          </button>
+        ))}
       </div>
 
       {/* Results count */}

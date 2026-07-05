@@ -94,7 +94,8 @@
     "allYears": "All years",
     "sortViews": "Most viewed",
     "sortDate": "Newest",
-    "allAdventures": "All adventures"
+    "filterBy": "Filter",
+    "allTag": "All"
   },
   "live": {
     "title": "Live",

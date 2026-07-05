@@ -94,7 +94,8 @@
     "allYears": "Toutes les années",
     "sortViews": "Plus vus",
     "sortDate": "Plus récents",
-    "allAdventures": "Toutes les aventures"
+    "filterBy": "Filtrer",
+    "allTag": "Tout"
   },
   "live": {
     "title": "Live",

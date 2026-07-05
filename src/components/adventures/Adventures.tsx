@@ -68,6 +68,16 @@ export default function Adventures() {
             ))}
           </div>
 
+          {/* Gradient fade overlay — left edge, blocks clicks on faded cards */}
+          {canScrollLeft && (
+            <div
+              className="absolute left-0 top-0 bottom-0 w-32 z-10 pointer-events-auto"
+              style={{
+                background: 'linear-gradient(to left, transparent 0%, rgb(3 7 18) 100%)',
+              }}
+            />
+          )}
+
           {/* Gradient fade overlay — right edge, blocks clicks on faded cards */}
           {canScrollRight && (
             <div

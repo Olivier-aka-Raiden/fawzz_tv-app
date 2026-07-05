@@ -64,4 +64,18 @@ export const PROJECTS: Project[] = [
       { label: 'Watch', value: '64K' },
     ],
   },
+  {
+    id: 'subabike-2026',
+    title: 'SubaBike 2026',
+    subtitle: 'La prochaine aventure se prépare…',
+    description: "Après la France, le Danemark, et Malte, une nouvelle destination se profile. Le format SubaBike revient en 2026 pour une aventure encore plus ambitieuse — la destination sera dévoilée prochainement. Restez connectés.",
+    badge: '2026 • À venir',
+    comingSoon: true,
+    stats: [
+      { label: 'Distance', value: '???' },
+      { label: 'Durée', value: '???' },
+      { label: 'Stream', value: '???' },
+      { label: 'Watch', value: '???' },
+    ],
+  },
 ];

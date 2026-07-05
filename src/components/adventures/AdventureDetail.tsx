@@ -1,6 +1,6 @@
 import { useParams, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { ArrowLeft, Calendar, Map, Star } from 'lucide-react';
+import { ArrowLeft, Calendar, Map, Star, Compass } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { PROJECTS } from '../../data/adventures';
 import { ROUTES } from '../../data/routes';
@@ -30,6 +30,50 @@ export default function AdventureDetail() {
   }
 
   const route = ROUTES.find(r => r.id === project.routeId);
+
+  // Coming soon — teaser view
+  if (project.comingSoon) {
+    return (
+      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="py-8 px-4 max-w-6xl mx-auto">
+        <Link to="/aventures" className="inline-flex items-center gap-2 text-gray-400 hover:text-white mb-8 transition-colors text-sm">
+          <ArrowLeft size={18} />
+          {t('adventures.back')}
+        </Link>
+
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center py-16">
+          <motion.div
+            animate={{ rotate: 360 }}
+            transition={{ duration: 60, repeat: Infinity, ease: 'linear' }}
+            className="mx-auto mb-8 w-20 h-20 rounded-full border-2 border-twitch/30 flex items-center justify-center"
+          >
+            <Compass size={36} className="text-twitch" />
+          </motion.div>
+
+          {project.badge && (
+            <span className="inline-block text-xs font-semibold px-2.5 py-0.5 bg-twitch/10 text-twitch-glow border border-twitch/30 rounded-full mb-4">
+              {project.badge}
+            </span>
+          )}
+          <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">{project.title}</h1>
+          <p className="text-gray-400 text-lg max-w-2xl mx-auto leading-relaxed mb-8">{project.description}</p>
+
+          <div className="max-w-md mx-auto bg-gray-900 border border-gray-800 rounded-2xl p-6">
+            <p className="text-gray-500 text-sm mb-4">{t('adventures.comingSoonTeaser')}</p>
+            <div className="grid grid-cols-2 gap-4">
+              {project.stats.map(stat => (
+                <div key={stat.label} className="text-center">
+                  <div className="text-2xl font-bold text-gray-600">???</div>
+                  <div className="text-xs text-gray-500 uppercase">{stat.label}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <p className="mt-8 text-gray-600 text-sm">{t('adventures.comingSoonCta')}</p>
+        </motion.div>
+      </motion.div>
+    );
+  }
 
   // Fetch clips for this adventure's date range
   const adventureClips = useAdventureClips(

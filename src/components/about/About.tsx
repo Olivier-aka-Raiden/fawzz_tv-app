@@ -40,10 +40,31 @@ export default function About() {
 
   return (
     <section className="py-16 px-4 max-w-3xl mx-auto">
+      {/* Portrait — large circular profile picture */}
+      <motion.div
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.5 }}
+        className="flex justify-center mb-8"
+      >
+        <div className="w-40 h-40 sm:w-48 sm:h-48 rounded-full overflow-hidden border-2 border-twitch/40 shadow-lg shadow-twitch/10">
+          <picture>
+            <source srcSet="/assets/brand/fawzz-portrait-mobile.jpg" media="(max-width: 640px)" />
+            <img
+              src="/assets/brand/fawzz-portrait.jpg"
+              alt="Fawzz_tv portrait"
+              className="w-full h-full object-cover"
+              loading="eager"
+            />
+          </picture>
+        </div>
+      </motion.div>
+
       {/* Brand name — main element */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.15 }}
         className="text-center mb-4"
       >
         <h1 className="brand-text text-5xl sm:text-6xl md:text-7xl">

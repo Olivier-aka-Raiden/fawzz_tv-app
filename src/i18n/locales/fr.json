@@ -71,7 +71,21 @@
   "clips": {
     "title": "Clips",
     "subtitle": "Les meilleurs moments de la chaîne, capturés par la communauté.",
-    "empty": "Aucun clip pour le moment."
+    "empty": "Aucun clip pour le moment.",
+    "noResults": "Aucun clip trouvé",
+    "noResultsHint": "Essayez de modifier vos filtres ou votre recherche.",
+    "results": "clips",
+    "searchPlaceholder": "Rechercher un clip…",
+    "allYears": "Toutes les années",
+    "sortViews": "Plus vus",
+    "sortDate": "Plus récents",
+    "categories": {
+      "all": "Tous",
+      "counterStrike": "Counter-Strike",
+      "valorant": "Valorant",
+      "faceCam": "Face caméra",
+      "periples": "Périples à vélo"
+    }
   },
   "live": {
     "title": "Live",

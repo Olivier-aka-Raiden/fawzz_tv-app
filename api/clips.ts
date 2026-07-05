@@ -2,8 +2,10 @@
  * Vercel serverless function — proxies Twitch clip requests.
  * Secrets stay server-side, never exposed to the client.
  *
- * GET /api/clips                          → all clips, sorted by popularity
- * GET /api/clips?started_at=ISO&ended_at=ISO → clips within date range
+ * GET /api/clips                                    → all clips, sorted by popularity
+ * GET /api/clips?started_at=ISO&ended_at=ISO        → clips within date range
+ * GET /api/clips?game_id=ID                         → clips from a specific game
+ * GET /api/clips?sort=views|date                    → sort order
  */
 
 const CLIENT_ID = process.env.TWITCH_CLIENT_ID!;
@@ -92,6 +94,8 @@ export async function GET(request: Request): Promise<Response> {
   const url = new URL(request.url);
   const startedAt = url.searchParams.get('started_at') || undefined;
   const endedAt = url.searchParams.get('ended_at') || undefined;
+  const gameId = url.searchParams.get('game_id') || undefined;
+  const sort = url.searchParams.get('sort') as 'views' | 'date' | undefined;
 
   try {
     // Resolve broadcaster ID
@@ -110,6 +114,7 @@ export async function GET(request: Request): Promise<Response> {
       if (cursor) params.set('after', cursor);
       if (startedAt) params.set('started_at', startedAt);
       if (endedAt) params.set('ended_at', endedAt);
+      if (gameId) params.set('game_id', gameId);
 
       const data = await twitchRequest<{
         data: TwitchClip[];
@@ -133,8 +138,12 @@ export async function GET(request: Request): Promise<Response> {
       if (!cursor || data.data.length === 0) break;
     }
 
-    // Sort by view count descending
-    allClips.sort((a, b) => b.viewCount - a.viewCount);
+    // Sort by view count descending (default) or by date
+    if (sort === 'date') {
+      allClips.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+    } else {
+      allClips.sort((a, b) => b.viewCount - a.viewCount);
+    }
 
     return new Response(JSON.stringify(allClips), { status: 200, headers });
   } catch (err) {

@@ -10,12 +10,6 @@ interface UseClipsResult {
   retry: () => void;
 }
 
-/**
- * Dynamically fetch clips from the Twitch API.
- * Falls back to the static clip list if the API is unavailable.
- *
- * @param filters - Optional date range for per-adventure clips
- */
 export function useClips(filters?: ClipFilters): UseClipsResult {
   const [clips, setClips] = useState<ClipData[]>([]);
   const [loading, setLoading] = useState(true);
@@ -31,14 +25,14 @@ export function useClips(filters?: ClipFilters): UseClipsResult {
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err);
       setError(message);
-      // Fall back to static data only when no date filters are applied
-      if (!filters?.startedAt && !filters?.endedAt) {
+      // Fall back to static data only when no date/game filters are applied
+      if (!filters?.startedAt && !filters?.endedAt && !filters?.gameId) {
         setClips(FALLBACK_CLIPS);
       }
     } finally {
       setLoading(false);
     }
-  }, [filters?.startedAt, filters?.endedAt]);
+  }, [filters?.startedAt, filters?.endedAt, filters?.gameId, filters?.sort]);
 
   useEffect(() => {
     load();
@@ -49,7 +43,6 @@ export function useClips(filters?: ClipFilters): UseClipsResult {
 
 /**
  * Fetch clips for a specific adventure date range.
- * Uses the adventure's start/end dates to filter Twitch clips.
  */
 export function useAdventureClips(startDate: string, endDate: string): UseClipsResult {
   return useClips({

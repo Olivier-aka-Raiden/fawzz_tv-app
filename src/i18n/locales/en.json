@@ -71,7 +71,21 @@
   "clips": {
     "title": "Clips",
     "subtitle": "The channel's best moments, captured by the community.",
-    "empty": "No clips yet."
+    "empty": "No clips yet.",
+    "noResults": "No clips found",
+    "noResultsHint": "Try adjusting your filters or search.",
+    "results": "clips",
+    "searchPlaceholder": "Search clips…",
+    "allYears": "All years",
+    "sortViews": "Most viewed",
+    "sortDate": "Newest",
+    "categories": {
+      "all": "All",
+      "counterStrike": "Counter-Strike",
+      "valorant": "Valorant",
+      "faceCam": "Face cam",
+      "periples": "Bike trips"
+    }
   },
   "live": {
     "title": "Live",

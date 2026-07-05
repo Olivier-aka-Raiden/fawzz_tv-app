@@ -39,32 +39,33 @@ export default function About() {
   const { t } = useTranslation();
 
   return (
-    <section className="pt-24 pb-16 px-4 max-w-3xl mx-auto">
-      {/* Header: title left, small portrait right */}
+    <section className="pt-24 pb-16 px-4 max-w-6xl mx-auto">
+      {/* Header: portrait left 50%, title right 50% */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="flex flex-col sm:flex-row items-center sm:items-start gap-6 sm:gap-8 mb-12"
+        className="flex flex-col md:flex-row items-center md:items-center gap-8 md:gap-12 mb-14"
       >
-        {/* Title */}
-        <div className="flex-1 text-center sm:text-left">
-          <h1 className="brand-text text-4xl sm:text-5xl mb-2">FAWZZ_TV</h1>
-          <p className="text-gray-400 text-base sm:text-lg">
-            {t('about.title')} — {t('about.subtitle')}
-          </p>
-        </div>
-
-        {/* Portrait — small, rounded */}
-        <div className="shrink-0 w-28 h-28 sm:w-36 sm:h-36 rounded-2xl overflow-hidden ring-2 ring-twitch/30 shadow-lg shadow-twitch/5">
+        {/* Portrait — left half, large, borderless */}
+        <div className="md:w-1/2 flex justify-center md:justify-start">
           <picture>
+            <source srcSet="/assets/brand/fawzz-portrait-bg.jpg" media="(min-width: 1201px)" />
             <source srcSet="/assets/brand/fawzz-portrait-bg-md.jpg" media="(min-width: 641px)" />
             <img
               src="/assets/brand/fawzz-portrait-bg-sm.jpg"
               alt="Fawzz_tv"
-              className="w-full h-full object-cover object-top"
+              className="w-56 sm:w-72 md:w-full max-w-sm rounded-2xl shadow-2xl shadow-black/40 object-cover object-top"
               loading="eager"
             />
           </picture>
+        </div>
+
+        {/* Title — right half */}
+        <div className="md:w-1/2 text-center md:text-left">
+          <h1 className="brand-text text-4xl sm:text-5xl md:text-6xl mb-3">FAWZZ_TV</h1>
+          <p className="text-gray-400 text-base sm:text-lg">
+            {t('about.title')} — {t('about.subtitle')}
+          </p>
         </div>
       </motion.div>
 
@@ -73,7 +74,7 @@ export default function About() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2 }}
-        className="bg-gray-900 border border-gray-800 rounded-2xl p-6 sm:p-8 space-y-5 mb-12"
+        className="max-w-3xl mx-auto bg-gray-900 border border-gray-800 rounded-2xl p-6 sm:p-8 space-y-5 mb-12"
       >
         {(t('about.bio', { returnObjects: true }) as string[]).map((p, i) => (
           <p key={i} className="text-gray-300 leading-relaxed text-sm sm:text-base">{p}</p>

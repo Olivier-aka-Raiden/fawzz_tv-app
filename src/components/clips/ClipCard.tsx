@@ -19,30 +19,27 @@ export default function ClipCard({ clip, index }: { clip: ClipData; index: numbe
   const [playing, setPlaying] = useState(false);
   const [imgError, setImgError] = useState(false);
 
-  if (playing) {
-    return (
-      <div className="aspect-video bg-black rounded-xl overflow-hidden">
-        <iframe
-          src={`https://clips.twitch.tv/embed?clip=${clip.id}&parent=localhost&parent=${window.location.hostname}&autoplay=true`}
-          title={clip.title}
-          className="w-full h-full"
-          allowFullScreen
-        />
-      </div>
-    );
-  }
-
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.05 }}
       viewport={{ once: true }}
-      className="bg-gray-900 border border-gray-800 rounded-xl overflow-hidden hover:border-gray-700 transition-colors cursor-pointer group"
-      onClick={() => setPlaying(true)}
+      className={`bg-gray-900 border rounded-xl overflow-hidden transition-colors group ${
+        playing ? 'border-twitch/40' : 'border-gray-800 hover:border-gray-700 cursor-pointer'
+      }`}
+      onClick={() => !playing && setPlaying(true)}
     >
-      <div className="aspect-video relative bg-gray-800">
-        {imgError ? (
+      {/* Thumbnail / Player */}
+      <div className="aspect-video relative bg-black">
+        {playing ? (
+          <iframe
+            src={`https://clips.twitch.tv/embed?clip=${clip.id}&parent=localhost&parent=${window.location.hostname}&autoplay=true`}
+            title={clip.title}
+            className="w-full h-full"
+            allowFullScreen
+          />
+        ) : imgError ? (
           <div className="w-full h-full flex items-center justify-center bg-gray-800">
             <div className="text-center text-gray-600">
               <ImageOff size={32} className="mx-auto mb-1" />
@@ -50,23 +47,27 @@ export default function ClipCard({ clip, index }: { clip: ClipData; index: numbe
             </div>
           </div>
         ) : (
-          <img
-            src={clip.thumbnailUrl}
-            alt={clip.title}
-            className="w-full h-full object-cover"
-            loading="lazy"
-            onError={() => setImgError(true)}
-          />
+          <>
+            <img
+              src={clip.thumbnailUrl}
+              alt={clip.title}
+              className="w-full h-full object-cover"
+              loading="lazy"
+              onError={() => setImgError(true)}
+            />
+            <div className="absolute inset-0 flex items-center justify-center bg-black/40 group-hover:bg-black/30 transition-colors">
+              <div className="w-14 h-14 rounded-full bg-twitch/90 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                <div className="w-0 h-0 border-t-[10px] border-t-transparent border-l-[18px] border-l-white border-b-[10px] border-b-transparent ml-1" />
+              </div>
+            </div>
+            <div className="absolute bottom-2 right-2 bg-black/80 text-white text-xs px-1.5 py-0.5 rounded font-mono">
+              {formatDuration(clip.duration)}
+            </div>
+          </>
         )}
-        <div className="absolute inset-0 flex items-center justify-center bg-black/40 group-hover:bg-black/30 transition-colors">
-          <div className="w-14 h-14 rounded-full bg-twitch/90 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
-            <div className="w-0 h-0 border-t-[10px] border-t-transparent border-l-[18px] border-l-white border-b-[10px] border-b-transparent ml-1" />
-          </div>
-        </div>
-        <div className="absolute bottom-2 right-2 bg-black/80 text-white text-xs px-1.5 py-0.5 rounded font-mono">
-          {formatDuration(clip.duration)}
-        </div>
       </div>
+
+      {/* Info — always visible */}
       <div className="p-4 space-y-2">
         <h3 className="text-sm font-medium text-gray-200 line-clamp-2 group-hover:text-white transition-colors">
           {clip.title}

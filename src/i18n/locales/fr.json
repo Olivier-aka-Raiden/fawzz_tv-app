@@ -47,12 +47,12 @@
       "2022": {
         "title": "Sochaux → Nice",
         "subtitle": "La première traversée de la France à vélo",
-        "description": "Première grande aventure cycliste en direct sur Twitch. 10 jours pour relier Sochaux à la Méditerranée, posant les bases de ce qui allait devenir une série de voyages communautaires.",
+        "description": "Première grande aventure cycliste en direct sur Twitch. 11 jours pour relier Sochaux à la Méditerranée, posant les bases de ce qui allait devenir une série de voyages communautaires.",
         "badge": "2022",
         "distance": "Distance",
         "duration": "Durée",
         "stream": "Stream",
-        "watch": "Watch"
+        "watch": "Watch (h)"
       },
       "2023": {
         "title": "Sochaux → Danemark",

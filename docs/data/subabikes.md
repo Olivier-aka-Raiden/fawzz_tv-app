@@ -16,11 +16,11 @@
 
 ## Statistics
 
-| Metric | Value |
-|--------|------:|
-| Estimated distance | **≈ 620 km** |
-| Hours streamed | **110 h** |
-| Watch hours | **21.2K** |
+| Metric |          Value |
+|--------|---------------:|
+| Estimated distance | **≈ 1 000 km** |
+| Hours streamed |      **110 h** |
+| Watch hours |      **21.2K** |
 
 ## Highlight
 
@@ -86,9 +86,9 @@
 
 # Timeline
 
-| Year | Adventure | Distance | Stream Time | Watch Hours |
+| Year | Adventure |  Distance | Stream Time | Watch Hours |
 |------|-----------|----------:|------------:|------------:|
-| **2022** | Sochaux → Nice | ≈620 km | 110 h | 21.2K |
+| **2022** | Sochaux → Nice |  ≈1000 km | 110 h | 21.2K |
 | **2023** | Sochaux → Denmark | ≈1,000 km | 156 h | 7.9K |
 | **2024** | Sochaux → Malta | ≈1,800 km | 286 h | 64K |
 

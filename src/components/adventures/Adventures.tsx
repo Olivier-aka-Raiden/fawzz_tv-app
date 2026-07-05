@@ -23,8 +23,10 @@ export default function Adventures() {
           }}
         >
           {PROJECTS.map((project, i) => (
-            <div key={project.id} className="min-w-[340px] max-w-[380px] flex-shrink-0 snap-start">
-              <AdventureCard project={project} index={i} />
+            <div key={project.id} className="min-w-[340px] max-w-[380px] flex-shrink-0 snap-start self-stretch">
+              <div className="h-full">
+                <AdventureCard project={project} index={i} />
+              </div>
             </div>
           ))}
         </div>

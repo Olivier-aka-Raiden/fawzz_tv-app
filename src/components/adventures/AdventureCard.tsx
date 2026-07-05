@@ -21,7 +21,7 @@ export default function AdventureCard({ project, index }: { project: Project; in
       whileInView={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.1 }}
       viewport={{ once: true }}
-      className={`bg-gray-900 border rounded-2xl overflow-hidden transition-all p-6 space-y-4 group ${
+      className={`bg-gray-900 border rounded-2xl overflow-hidden transition-all p-6 flex flex-col h-full group ${
         project.comingSoon
           ? 'border-twitch/30 bg-gradient-to-br from-gray-900 via-gray-900 to-twitch/5 cursor-default'
           : 'border-gray-800 hover:border-gray-700 hover:bg-gray-900/80 cursor-pointer'
@@ -29,7 +29,7 @@ export default function AdventureCard({ project, index }: { project: Project; in
     >
       {project.badge && (
         <span
-          className={`inline-block text-xs font-semibold px-2.5 py-0.5 rounded-full ${
+          className={`inline-block text-xs font-semibold px-2.5 py-0.5 rounded-full w-fit ${
             project.comingSoon
               ? 'bg-twitch/10 text-twitch-glow border border-twitch/30'
               : 'bg-twitch/20 text-twitch'
@@ -42,7 +42,7 @@ export default function AdventureCard({ project, index }: { project: Project; in
         {tk('title')}
       </h3>
       <p className="text-gray-500 text-sm">{tk('subtitle')}</p>
-      <p className="text-gray-400 text-sm leading-relaxed">{tk('description')}</p>
+      <p className="text-gray-400 text-sm leading-relaxed flex-1">{tk('description')}</p>
       <div className="grid grid-cols-2 gap-3 pt-2 border-t border-gray-800">
         {project.stats.map(stat => (
           <div key={stat.label}>

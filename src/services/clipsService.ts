@@ -26,7 +26,14 @@ export async function fetchClips(filters?: ClipFilters): Promise<ClipData[]> {
     throw new Error(body.error || `API ${res.status}`);
   }
 
-  return res.json();
+  // If the response isn't valid JSON (e.g. local dev where API isn't running),
+  // throw a clean error instead of a raw JSON parse failure.
+  const text = await res.text();
+  try {
+    return JSON.parse(text);
+  } catch {
+    throw new Error('API unavailable — using cached clips');
+  }
 }
 
 /**

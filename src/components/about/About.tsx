@@ -40,28 +40,28 @@ export default function About() {
 
   return (
     <section className="pt-24 pb-16 px-4 max-w-6xl mx-auto">
-      {/* Header: portrait left 50%, title right 50% */}
+      {/* Header: portrait left, title right — same width as bio card */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="flex flex-col md:flex-row items-center md:items-center gap-8 md:gap-12 mb-14"
+        className="max-w-3xl mx-auto flex flex-col md:flex-row items-center gap-6 md:gap-10 mb-14"
       >
-        {/* Portrait — left half, large, borderless */}
-        <div className="md:w-1/2 flex justify-center md:justify-start">
+        {/* Portrait — left */}
+        <div className="md:w-2/5 shrink-0 flex justify-center">
           <picture>
             <source srcSet="/assets/brand/fawzz-portrait-bg.jpg" media="(min-width: 1201px)" />
             <source srcSet="/assets/brand/fawzz-portrait-bg-md.jpg" media="(min-width: 641px)" />
             <img
               src="/assets/brand/fawzz-portrait-bg-sm.jpg"
               alt="Fawzz_tv"
-              className="w-56 sm:w-72 md:w-full max-w-sm rounded-2xl shadow-2xl shadow-black/40 object-cover object-top"
+              className="w-56 sm:w-72 md:w-full max-w-xs rounded-2xl shadow-2xl shadow-black/40 object-cover object-top"
               loading="eager"
             />
           </picture>
         </div>
 
-        {/* Title — right half */}
-        <div className="md:w-1/2 text-center md:text-left">
+        {/* Title — right */}
+        <div className="md:w-3/5 text-center md:text-left">
           <h1 className="brand-text text-4xl sm:text-5xl md:text-6xl mb-3">FAWZZ_TV</h1>
           <p className="text-gray-400 text-base sm:text-lg">
             {t('about.title')} — {t('about.subtitle')}

@@ -1,9 +1,35 @@
 import { useTranslation } from 'react-i18next';
+import { useRef, useState, useEffect, useCallback } from 'react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import AdventureCard from './AdventureCard';
 import { PROJECTS } from '../../data/adventures';
 
 export default function Adventures() {
   const { t } = useTranslation();
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(true);
+
+  const updateScrollState = useCallback(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    setCanScrollLeft(el.scrollLeft > 8);
+    setCanScrollRight(el.scrollLeft + el.clientWidth < el.scrollWidth - 8);
+  }, []);
+
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    updateScrollState();
+    el.addEventListener('scroll', updateScrollState, { passive: true });
+    return () => el.removeEventListener('scroll', updateScrollState);
+  }, [updateScrollState]);
+
+  const scroll = (dir: 'left' | 'right') => {
+    const el = scrollRef.current;
+    if (!el) return;
+    el.scrollBy({ left: dir === 'left' ? -360 : 360, behavior: 'smooth' });
+  };
 
   return (
     <section className="py-24 px-4 max-w-[90rem] mx-auto">
@@ -14,13 +40,31 @@ export default function Adventures() {
 
       {/* Desktop: horizontal scroll with right-edge fade */}
       <div className="hidden md:block relative">
+        {/* Scroll buttons */}
+        {canScrollLeft && (
+          <button
+            onClick={() => scroll('left')}
+            className="absolute left-0 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-gray-800/80 hover:bg-gray-700 border border-gray-700 flex items-center justify-center text-gray-300 hover:text-white transition-colors shadow-lg"
+            aria-label="Scroll left"
+          >
+            <ChevronLeft size={20} />
+          </button>
+        )}
+
+        {canScrollRight && (
+          <button
+            onClick={() => scroll('right')}
+            className="absolute right-0 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-gray-800/80 hover:bg-gray-700 border border-gray-700 flex items-center justify-center text-gray-300 hover:text-white transition-colors shadow-lg"
+            aria-label="Scroll right"
+          >
+            <ChevronRight size={20} />
+          </button>
+        )}
+
         {/* Scrollable row */}
         <div
-          className="flex gap-6 overflow-x-auto pb-4 pr-12 snap-x snap-mandatory scrollbar-hide"
-          style={{
-            maskImage: 'linear-gradient(to right, black 60%, transparent 95%)',
-            WebkitMaskImage: 'linear-gradient(to right, black 60%, transparent 95%)',
-          }}
+          ref={scrollRef}
+          className="flex gap-6 overflow-x-auto pb-4 px-12 snap-x snap-mandatory scrollbar-hide"
         >
           {PROJECTS.map((project, i) => (
             <div key={project.id} className="min-w-[340px] max-w-[380px] flex-shrink-0 snap-start self-stretch">
@@ -31,12 +75,13 @@ export default function Adventures() {
           ))}
         </div>
 
-        {/* Scroll hint — subtle arrow on the right */}
-        <div className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-600 pointer-events-none hidden lg:block">
-          <svg className="w-6 h-6 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-          </svg>
-        </div>
+        {/* Gradient fade overlay — right edge, blocks clicks on faded cards */}
+        <div
+          className="absolute right-0 top-0 bottom-0 w-32 z-10 pointer-events-auto"
+          style={{
+            background: 'linear-gradient(to right, transparent 0%, rgb(3 7 18) 100%)',
+          }}
+        />
       </div>
 
       {/* Mobile: stacked column */}

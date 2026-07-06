@@ -109,7 +109,10 @@
     "title": "Sponsors",
     "subtitle": "Les marques et partenaires qui soutiennent la chaîne. Découvrez leurs produits et profitez des codes promo exclusifs.",
     "empty": "Les sponsors seront annoncés prochainement.",
-    "emptySub": "Revenez bientôt pour découvrir les marques partenaires."
+    "emptySub": "Revenez bientôt pour découvrir les marques partenaires.",
+    "ctaTitle": "Devenez partenaire du SubaBike",
+    "ctaBody": "Nous recherchons des sponsors pour rendre le prochain SubaBike possible. Contactez-nous pour rejoindre l'aventure et placer votre marque au cœur d'une expérience communautaire unique.",
+    "ctaButton": "Nous contacter"
   },
   "about": {
     "title": "À propos",

@@ -128,7 +128,10 @@
     "title": "Sponsors",
     "subtitle": "The brands and partners supporting the channel. Discover their products and enjoy exclusive promo codes.",
     "empty": "Sponsors will be announced soon.",
-    "emptySub": "Come back soon to discover our partner brands."
+    "emptySub": "Come back soon to discover our partner brands.",
+    "ctaTitle": "Partner with SubaBike",
+    "ctaBody": "We're looking for sponsors to make the next SubaBike possible. Reach out to join the adventure and put your brand at the heart of a unique community experience.",
+    "ctaButton": "Reach out"
   },
   "about": {
     "title": "About",

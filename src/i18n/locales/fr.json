@@ -58,21 +58,40 @@
         "distance": "Distance",
         "duration": "Durée",
         "stream": "Stream",
-        "watch": "Watch (h)"
+        "watch": "Watch (h)",
+        "highlights": [
+          "Première traversée complète de la France à vélo en live",
+          "Arrivée sur la Méditerranée après 1 000 km",
+          "Naissance du format d'aventure communautaire sur la chaîne"
+        ]
       },
       "2023": {
         "title": "Lille → Copenhague",
         "subtitle": "De Lille à Amsterdam, puis cap sur le Danemark",
         "description": "De Lille à Copenhague en 13 jours. Passage par Amsterdam, puis traversée en bateau vers le Danemark et route jusqu'à la capitale danoise.",
         "badge": "2023",
-        "story": "Forte du succès de la première édition, l'aventure 2023 change de point de départ : direction Lille. Passage par Bruxelles, Anvers, puis Amsterdam avant de mettre le cap au nord. Une traversée en bateau plus tard, Copenhague est en vue. Avec 1 000 km au compteur et 4 pays traversés, cette édition a confirmé que le format longue distance en autonomie était viable — et que la communauté était prête à suivre sur la durée."
+        "story": "Forte du succès de la première édition, l'aventure 2023 change de point de départ : direction Lille. Passage par Bruxelles, Anvers, puis Amsterdam avant de mettre le cap au nord. Une traversée en bateau plus tard, Copenhague est en vue. Avec 1 000 km au compteur et 4 pays traversés, cette édition a confirmé que le format longue distance en autonomie était viable — et que la communauté était prête à suivre sur la durée.",
+        "highlights": [
+          "Départ de Lille, passage par la Belgique et les Pays-Bas",
+          "Arrêt à Amsterdam, puis direction la mer",
+          "Traversée en bateau vers le Danemark",
+          "Arrivée à Copenhague après 1 000 km"
+        ]
       },
       "2024": {
         "title": "Sochaux → Malte",
         "subtitle": "Le premier SubaBike — les subs ajoutent des kilomètres",
         "description": "Le format SubaBike est né : chaque abonnement ajoute des kilomètres au lieu de temps. 34 jours d'aventure internationale où la communauté décide de la route en temps réel.",
         "badge": "2024 • SubaBike",
-        "story": "L'édition 2024 a tout changé avec l'introduction du format SubaBike : chaque abonnement ajoute des kilomètres au parcours. Un donateur a fait exploser le compteur en ajoutant 1 700 km d'un coup. Résultat : 34 jours de stream, 5 pays traversés, et une aventure dont la communauté a littéralement écrit le scénario en temps réel."
+        "story": "L'édition 2024 a tout changé avec l'introduction du format SubaBike : chaque abonnement ajoute des kilomètres au parcours. Un donateur a fait exploser le compteur en ajoutant 1 700 km d'un coup. Résultat : 34 jours de stream, 5 pays traversés, et une aventure dont la communauté a littéralement écrit le scénario en temps réel.",
+        "highlights": [
+          "Format SubaBike inédit : les subs allongent le parcours",
+          "Détour Sète → Béziers → Narbonne → Sète pour la communauté",
+          "Côte d'Azur : Monaco, puis Riviera italienne (Savona, Gênes, La Spezia)",
+          "Deux ferrys : Civitavecchia → Palerme, Pozzallo → Malte",
+          "Traversée de la Sicile : Palerme → Trapani → Sciacca → Pozzallo",
+          "Un donateur ajoute 1 700 km d'un coup, record absolu"
+        ]
       },
       "2026": {
         "title": "SubaBike 2026",

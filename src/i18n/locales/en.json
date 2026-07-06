@@ -58,21 +58,40 @@
         "distance": "Distance",
         "duration": "Duration",
         "stream": "Stream",
-        "watch": "Watch (h)"
+        "watch": "Watch (h)",
+        "highlights": [
+          "First complete live crossing of France by bike",
+          "Arrival on the Mediterranean after 1,000 km",
+          "Birth of the community adventure format on the channel"
+        ]
       },
       "2023": {
         "title": "Lille → Copenhagen",
         "subtitle": "From Lille to Amsterdam, then heading to Denmark",
         "description": "13 days from Lille to Copenhagen. Through Amsterdam, then a boat crossing to Denmark and the road to the Danish capital.",
         "badge": "2023",
-        "story": "Building on the first edition's success, the 2023 adventure changed its starting point: heading out from Lille. Through Brussels, Antwerp, then Amsterdam before pointing north. One boat crossing later, Copenhagen was in sight. With 1,000 km covered and 4 countries crossed, this edition proved the long-distance self-sufficient format was viable — and that the community was ready to follow for the long haul."
+        "story": "Building on the first edition's success, the 2023 adventure changed its starting point: heading out from Lille. Through Brussels, Antwerp, then Amsterdam before pointing north. One boat crossing later, Copenhagen was in sight. With 1,000 km covered and 4 countries crossed, this edition proved the long-distance self-sufficient format was viable — and that the community was ready to follow for the long haul.",
+        "highlights": [
+          "Departure from Lille, through Belgium and the Netherlands",
+          "Stop in Amsterdam, then heading to the sea",
+          "Ferry crossing to Denmark",
+          "Arrival in Copenhagen after 1,000 km"
+        ]
       },
       "2024": {
         "title": "Sochaux → Malta",
         "subtitle": "The first SubaBike — subs add kilometers",
         "description": "The SubaBike format was born: each subscription adds kilometers instead of time. 34 days of international adventure where the community decides the route in real time.",
         "badge": "2024 • SubaBike",
-        "story": "The 2024 edition changed everything with the SubaBike format: each subscription adds kilometers to the route. One donor blew up the counter by adding 1,700 km in one go. The result: 34 days of streaming, 5 countries crossed, and an adventure whose script was literally written by the community in real time."
+        "story": "The 2024 edition changed everything with the SubaBike format: each subscription adds kilometers to the route. One donor blew up the counter by adding 1,700 km in one go. The result: 34 days of streaming, 5 countries crossed, and an adventure whose script was literally written by the community in real time.",
+        "highlights": [
+          "New SubaBike format: subs extend the route",
+          "Detour Sète → Béziers → Narbonne → Sète for the community",
+          "French Riviera: Monaco, then Italian Riviera (Savona, Genoa, La Spezia)",
+          "Two ferries: Civitavecchia → Palermo, Pozzallo → Malta",
+          "Crossing Sicily: Palermo → Trapani → Sciacca → Pozzallo",
+          "A donor adds 1,700 km in one go, an absolute record"
+        ]
       },
       "2026": {
         "title": "SubaBike 2026",

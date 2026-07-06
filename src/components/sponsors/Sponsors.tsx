@@ -26,6 +26,22 @@ export default function Sponsors() {
           <p className="text-sm mt-2">{t('sponsors.emptySub')}</p>
         </div>
       )}
+
+      {/* Sponsor CTA */}
+      <div className="mt-16 bg-gradient-to-br from-twitch/10 to-purple-900/20 border border-twitch/30 rounded-2xl p-8 md:p-12 text-center">
+        <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">
+          {t('sponsors.ctaTitle')}
+        </h2>
+        <p className="text-gray-300 max-w-2xl mx-auto mb-6 leading-relaxed">
+          {t('sponsors.ctaBody')}
+        </p>
+        <a
+          href="mailto:contact@fawzz.tv"
+          className="inline-flex items-center gap-2 px-6 py-3 bg-twitch text-white font-semibold rounded-xl hover:bg-twitch-glow transition-colors neon-glow-sm"
+        >
+          {t('sponsors.ctaButton')}
+        </a>
+      </div>
     </section>
   );
 }

@@ -201,7 +201,9 @@ export default function AdventureDetail() {
               {project.highlights.map((h, i) => (
                 <li key={i} className="flex items-start gap-3 text-gray-300">
                   <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-twitch shrink-0" />
-                  <span className="leading-relaxed">{h}</span>
+                  <span className="leading-relaxed">
+                    {project.tKey ? t(`${project.tKey}.highlights.${i}`, h) : h}
+                  </span>
                 </li>
               ))}
             </ul>

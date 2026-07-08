@@ -165,7 +165,7 @@ export default function AdventureDetail() {
             <Map size={18} className="text-twitch" />
             <h2 className="text-xl font-bold text-white">{t('adventures.route')}</h2>
           </div>
-          <RouteMap route={route} className="h-[350px] md:h-[500px]" />
+          <RouteMap key={route.id} route={route} className="h-[350px] md:h-[500px]" />
         </motion.div>
       )}
 

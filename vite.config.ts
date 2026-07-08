@@ -4,4 +4,12 @@ import tailwindcss from '@tailwindcss/vite'
 
 export default defineConfig({
   plugins: [react(), tailwindcss()],
+  server: {
+    proxy: {
+      '/api': {
+        target: process.env.VITE_API_PROXY || 'https://fawzz-tv-app.vercel.app',
+        changeOrigin: true,
+      },
+    },
+  },
 })

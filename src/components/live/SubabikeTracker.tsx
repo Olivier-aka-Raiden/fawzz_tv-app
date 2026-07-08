@@ -36,6 +36,13 @@ export default function SubabikeTracker() {
 
   console.log('[SubaBike UI] Render — loaded:', loaded, 'connected:', connected, 'steps:', totalSteps, 'currentLocation:', currentLocation);
 
+  // Guard against NaN coordinates that crash Mapbox GL
+  const safeLocation = currentLocation &&
+    Number.isFinite(currentLocation.lng) &&
+    Number.isFinite(currentLocation.lat)
+    ? currentLocation
+    : null;
+
   // Selected step range (indices into steps array)
   const [startIdx, setStartIdx] = useState(0);
   const [endIdx, setEndIdx] = useState(Math.max(0, totalSteps - 1));
@@ -72,13 +79,13 @@ export default function SubabikeTracker() {
 
   // Fit map to current location when it changes
   useEffect(() => {
-    if (!currentLocation || !mapRef.current) return;
+    if (!safeLocation || !mapRef.current) return;
     mapRef.current.flyTo({
-      center: [currentLocation.lng, currentLocation.lat],
+      center: [safeLocation.lng, safeLocation.lat],
       duration: 2000,
       zoom: mapRef.current.getZoom(),
     });
-  }, [currentLocation]);
+  }, [safeLocation]);
 
   // Slider interaction
   const sliderPercent = (idx: number) => totalSteps <= 1 ? 50 : (idx / (totalSteps - 1)) * 100;
@@ -136,8 +143,8 @@ export default function SubabikeTracker() {
   const numDays = endIdx - startIdx + 1;
 
   // Initial map center (Sochaux area default)
-  const defaultCenter: [number, number] = currentLocation
-    ? [currentLocation.lng, currentLocation.lat]
+  const defaultCenter: [number, number] = safeLocation
+    ? [safeLocation.lng, safeLocation.lat]
     : [6.8333, 47.5167]; // Sochaux
 
   return (
@@ -249,8 +256,8 @@ export default function SubabikeTracker() {
             })}
 
             {/* Current live position */}
-            {currentLocation && (
-              <Marker longitude={currentLocation.lng} latitude={currentLocation.lat} anchor="center">
+            {safeLocation && (
+              <Marker longitude={safeLocation.lng} latitude={safeLocation.lat} anchor="center">
                 <div className="relative">
                   <div className="w-5 h-5 rounded-full bg-red-500 border-2 border-white shadow-lg animate-pulse"
                     style={{ boxShadow: '0 0 16px rgba(239, 68, 68, 0.7), 0 0 32px rgba(239, 68, 68, 0.3)' }}

@@ -24,7 +24,19 @@ export default function AdventureDetail() {
   const { t } = useTranslation();
 
   const project = PROJECTS.find(p => p.id === id);
+
+  // ALL hooks must be called before any early return (React rules of hooks)
+  const adventureClips = useAdventureClips(
+    project?.dates?.start ?? '',
+    project?.dates?.end ?? '',
+  );
+
+  // Derived values (not hooks — safe to compute before early returns)
   const tk = (suffix: string) => project?.tKey ? t(`${project.tKey}.${suffix}`, (project as any)[suffix]) : (project as any)?.[suffix];
+  const route = project ? ROUTES.find(r => r.id === project.routeId) : undefined;
+  const hasDates = !!(project?.dates?.start && project?.dates?.end);
+
+  // --- Early returns (all hooks already called above) ---
 
   if (!project) {
     return (
@@ -36,8 +48,6 @@ export default function AdventureDetail() {
       </div>
     );
   }
-
-  const route = ROUTES.find(r => r.id === project.routeId);
 
   // Coming soon — teaser view
   if (project.comingSoon) {
@@ -85,12 +95,7 @@ export default function AdventureDetail() {
     );
   }
 
-  // Fetch clips for this adventure's date range
-  const adventureClips = useAdventureClips(
-    project.dates?.start ?? '',
-    project.dates?.end ?? '',
-  );
-  const hasDates = !!(project.dates?.start && project.dates?.end);
+  // --- Normal adventure detail (past adventures) ---
 
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="py-8 px-4 max-w-6xl mx-auto">

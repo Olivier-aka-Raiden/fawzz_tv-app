@@ -9,7 +9,7 @@
  *
  * Setup: Install the Upstash Redis integration from Vercel Marketplace:
  *   https://vercel.com/marketplace?category=storage&search=redis
- * The integration auto-sets UPSTASH_REDIS_REST_URL and UPSTASH_REDIS_REST_TOKEN.
+ * The integration auto-sets fawzztv_KV_REST_API_URL and fawzztv_KV_REST_API_TOKEN.
  */
 
 import { Redis } from '@upstash/redis';
@@ -32,8 +32,8 @@ function empty(): TrackingData {
 }
 
 function getRedis(): Redis | null {
-  const url = process.env.UPSTASH_REDIS_REST_URL;
-  const token = process.env.UPSTASH_REDIS_REST_TOKEN;
+  const url = process.env.fawzztv_KV_REST_API_URL;
+  const token = process.env.fawzztv_KV_REST_API_TOKEN;
   if (!url || !token) return null;
   return new Redis({ url, token });
 }

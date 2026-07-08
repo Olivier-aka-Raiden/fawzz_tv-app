@@ -15,8 +15,10 @@ const CORS_HEADERS: Record<string, string> = {
 
 export async function GET(): Promise<Response> {
   const pullKey = process.env.PULL_KEY;
+  console.log('[SubaBike API] GET /api/location called. PULL_KEY present:', !!pullKey);
   if (!pullKey) {
-    return new Response(JSON.stringify(null), { status: 200, headers: CORS_HEADERS });
+    console.warn('[SubaBike API] ❌ PULL_KEY is not set in environment variables');
+    return new Response(JSON.stringify({ error: 'PULL_KEY not configured' }), { status: 200, headers: CORS_HEADERS });
   }
 
   try {
@@ -28,29 +30,38 @@ export async function GET(): Promise<Response> {
     try {
       const api = await import('@rtirl/api');
       forPullKey = api.forPullKey;
-    } catch {
-      return new Response(JSON.stringify(null), { status: 200, headers: CORS_HEADERS });
+      console.log('[SubaBike API] ✅ @rtirl/api imported successfully');
+    } catch (err) {
+      console.error('[SubaBike API] ❌ Failed to import @rtirl/api:', err);
+      return new Response(JSON.stringify({ error: '@rtirl/api import failed' }), { status: 200, headers: CORS_HEADERS });
     }
 
     const location = await new Promise<{ latitude: number; longitude: number } | null>((resolve) => {
-      const timeout = setTimeout(() => resolve(null), 5000);
+      const timeout = setTimeout(() => {
+        console.warn('[SubaBike API] ⏱️ RTIRL listener timed out after 5s — no location received');
+        resolve(null);
+      }, 5000);
 
       let unsub: (() => void) | undefined;
       try {
         unsub = forPullKey(pullKey).addLocationListener((loc) => {
           clearTimeout(timeout);
           try { unsub?.(); } catch { /* ignore */ }
+          console.log('[SubaBike API] 📍 Location received from RTIRL:', JSON.stringify(loc));
           resolve(loc && typeof loc.latitude === 'number' ? loc : null);
         });
-      } catch {
+        console.log('[SubaBike API] 👂 RTIRL listener registered, waiting for location...');
+      } catch (err) {
         clearTimeout(timeout);
+        console.error('[SubaBike API] ❌ forPullKey/addLocationListener threw:', err);
         resolve(null);
       }
     });
 
     return new Response(JSON.stringify(location), { status: 200, headers: CORS_HEADERS });
-  } catch {
-    return new Response(JSON.stringify(null), { status: 200, headers: CORS_HEADERS });
+  } catch (err) {
+    console.error('[SubaBike API] ❌ Unexpected error in GET /api/location:', err);
+    return new Response(JSON.stringify({ error: 'Internal server error' }), { status: 200, headers: CORS_HEADERS });
   }
 }
 

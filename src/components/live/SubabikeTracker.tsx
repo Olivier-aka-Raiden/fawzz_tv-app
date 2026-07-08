@@ -27,12 +27,14 @@ function pointsToGeoJSON(points: TrackPoint[]) {
 
 export default function SubabikeTracker() {
   const { t } = useTranslation();
-  const { tracking, currentLocation, connected } = useSubabikeTracking();
+  const { tracking, currentLocation, connected, loaded } = useSubabikeTracking();
   const mapRef = useRef<MapRef>(null);
   const sliderRef = useRef<HTMLDivElement>(null);
 
   const steps = tracking.steps;
   const totalSteps = steps.length;
+
+  console.log('[SubaBike UI] Render — loaded:', loaded, 'connected:', connected, 'steps:', totalSteps, 'currentLocation:', currentLocation);
 
   // Selected step range (indices into steps array)
   const [startIdx, setStartIdx] = useState(0);

@@ -69,10 +69,14 @@ async function reverseGeocode(lng: number, lat: number): Promise<string> {
 async function fetchFromServer(): Promise<TrackingData | null> {
   try {
     const res = await fetch('/api/tracking');
+    console.log('[SubaBike Hook] fetchFromServer status:', res.status);
     if (!res.ok) return null;
     const data = await res.json();
+    console.log('[SubaBike Hook] fetchFromServer data:', data?.steps?.length, 'steps');
     if (data?.steps?.length > 0) return data;
-  } catch { /* ignore */ }
+  } catch (err) {
+    console.warn('[SubaBike Hook] fetchFromServer failed:', err);
+  }
   return null;
 }
 
@@ -91,13 +95,27 @@ async function saveToServer(data: TrackingData): Promise<boolean> {
 /** Poll the server-side proxy for current GPS location. Pull key stays server-side. */
 async function fetchCurrentLocation(): Promise<{ lng: number; lat: number } | null> {
   try {
+    console.log('[SubaBike Hook] 🔄 Polling /api/location...');
     const res = await fetch('/api/location');
-    if (!res.ok) return null;
+    console.log('[SubaBike Hook] /api/location response:', res.status, res.statusText);
+    if (!res.ok) {
+      console.warn('[SubaBike Hook] /api/location returned non-OK status:', res.status);
+      return null;
+    }
     const data = await res.json();
+    console.log('[SubaBike Hook] /api/location raw data:', JSON.stringify(data));
     if (data && typeof data.latitude === 'number' && typeof data.longitude === 'number') {
+      console.log('[SubaBike Hook] ✅ Valid location received:', data.latitude, data.longitude);
       return { lng: data.longitude, lat: data.latitude };
     }
-  } catch { /* ignore */ }
+    if (data?.error) {
+      console.warn('[SubaBike Hook] ⚠️ API returned error:', data.error);
+    } else {
+      console.warn('[SubaBike Hook] ⚠️ API returned null or invalid data:', data);
+    }
+  } catch (err) {
+    console.error('[SubaBike Hook] ❌ fetchCurrentLocation threw:', err);
+  }
   return null;
 }
 
@@ -154,6 +172,7 @@ export default function useSubabikeTracking() {
         consecutiveFailures = 0;
         setConnected(true);
         setCurrentLocation(loc);
+        console.log('[SubaBike Hook] 📍 connected=true, currentLocation=', loc);
 
         const now = Date.now();
         const current = trackingRef.current;
@@ -176,6 +195,7 @@ export default function useSubabikeTracking() {
             needsServerSave = true;
             currentDayKey = todayKey;
             const dayNumber = steps.length + 1;
+            console.log('[SubaBike Hook] 🌅 New day detected!', todayKey, '→ day', dayNumber);
 
             const newStep: SubabikeStep = {
               id: `day-${todayKey}`,
@@ -236,8 +256,10 @@ export default function useSubabikeTracking() {
         });
       } else {
         consecutiveFailures++;
+        console.warn(`[SubaBike Hook] ⚠️ No location in poll #${consecutiveFailures} — /api/location returned null`);
         // Don't flip to "disconnected" on transient failures
         if (consecutiveFailures > 10) {
+          console.warn('[SubaBike Hook] 🔴 setConnected(false) after 10 consecutive failures');
           setConnected(false);
         }
       }

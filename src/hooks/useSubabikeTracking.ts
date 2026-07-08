@@ -28,17 +28,40 @@ function saveToStorage(data: TrackingData) {
   } catch { /* ignore */ }
 }
 
+interface GeocodeFeature {
+  text: string;
+  place_type: string[];
+  properties: { short_code?: string };
+}
+
+/** Reverse geocode using the RTIRL project's approach: request all types, pick the most specific. */
 async function reverseGeocode(lng: number, lat: number): Promise<string> {
   const token = import.meta.env.VITE_MAPBOX_TOKEN;
   if (!token) return 'Unknown';
   try {
     const res = await fetch(
-      `https://api.mapbox.com/geocoding/v5/mapbox.places/${lng},${lat}.json?types=place,locality,village&limit=1&language=fr&access_token=${token}`
+      `https://api.mapbox.com/geocoding/v5/mapbox.places/${lng},${lat}.json?language=fr&access_token=${token}`
     );
     const data = await res.json();
-    if (data.features?.length > 0) {
-      return data.features[0].text || data.features[0].place_name || 'Unknown';
-    }
+    const features: GeocodeFeature[] = data.features || [];
+
+    // Find features by type (same priority as RTIRL project)
+    const find = (type: string) => features.find(f => f.place_type.includes(type));
+
+    const locality = find('locality');
+    const place = find('place');
+    const neighborhood = find('neighborhood');
+    const region = find('region');
+    const country = find('country');
+
+    // Smart selection: most specific first
+    if (locality && place) return locality.text;        // e.g. "Montbéliard"
+    if (neighborhood && locality) return locality.text;
+    if (neighborhood && place) return place.text;       // fallback: town name
+    if (place) return place.text;
+    if (region) return region.text;                     // e.g. "Bourgogne-Franche-Comté"
+    if (country) return country.text;                   // e.g. "France"
+    if (features.length > 0) return features[0].text;
   } catch { /* ignore */ }
   return 'Unknown';
 }

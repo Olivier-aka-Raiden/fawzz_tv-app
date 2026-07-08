@@ -1,13 +1,17 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { forPullKey } from '@rtirl/api';
 import type { TrackingData, SubabikeStep } from '../data/subabike';
 
 const STORAGE_KEY = 'subabike-tracking';
 const PERSIST_INTERVAL_MS = 10 * 60 * 1000; // 10 minutes
+const POLL_INTERVAL_MS = 30 * 1000;          // poll server every 30s
 
 function getLocalDate(ts: number): string {
   const d = new Date(ts);
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+}
+
+function empty(): TrackingData {
+  return { steps: [], currentDayKey: null, lastPersistTime: null };
 }
 
 function loadFromStorage(): TrackingData {
@@ -15,7 +19,7 @@ function loadFromStorage(): TrackingData {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (raw) return JSON.parse(raw);
   } catch { /* ignore */ }
-  return { steps: [], currentDayKey: null, lastPersistTime: null };
+  return empty();
 }
 
 function saveToStorage(data: TrackingData) {
@@ -61,12 +65,24 @@ async function saveToServer(data: TrackingData): Promise<boolean> {
   return false;
 }
 
-export default function useSubabikeTracking(pullKey: string) {
+/** Poll the server-side proxy for current GPS location. Pull key stays server-side. */
+async function fetchCurrentLocation(): Promise<{ lng: number; lat: number } | null> {
+  try {
+    const res = await fetch('/api/location');
+    if (!res.ok) return null;
+    const data = await res.json();
+    if (data && typeof data.latitude === 'number' && typeof data.longitude === 'number') {
+      return { lng: data.longitude, lat: data.latitude };
+    }
+  } catch { /* ignore */ }
+  return null;
+}
+
+export default function useSubabikeTracking() {
   const [tracking, setTracking] = useState<TrackingData>(loadFromStorage);
-  const [_loaded, setLoaded] = useState(false);
+  const [loaded, setLoaded] = useState(false);
   const [currentLocation, setCurrentLocation] = useState<{ lng: number; lat: number } | null>(null);
   const [connected, setConnected] = useState(false);
-  const [serverAvailable, setServerAvailable] = useState(false);
   const trackingRef = useRef(tracking);
   trackingRef.current = tracking;
 
@@ -74,11 +90,9 @@ export default function useSubabikeTracking(pullKey: string) {
   useEffect(() => {
     fetchFromServer().then(serverData => {
       if (serverData && serverData.steps.length > 0) {
-        setServerAvailable(true);
         setTracking(serverData);
-        saveToStorage(serverData); // sync localStorage
+        saveToStorage(serverData);
       } else {
-        // Server unavailable or empty — use localStorage
         const localData = loadFromStorage();
         if (localData.steps.length > 0) {
           setTracking(localData);
@@ -93,132 +107,136 @@ export default function useSubabikeTracking(pullKey: string) {
     saveToStorage(tracking);
   }, [tracking]);
 
-  // Persist to server on significant changes (new step, new point)
+  // Debounced server persistence
   const lastServerSave = useRef(0);
   const saveToServerDebounced = useCallback((data: TrackingData) => {
     const now = Date.now();
-    // Only save to server every 30 seconds max to avoid spamming
     if (now - lastServerSave.current < 30_000) return;
     lastServerSave.current = now;
     saveToServer(data);
   }, []);
 
-  // Connect to RTIRL
+  // Poll the server-side location proxy
   useEffect(() => {
-    if (!pullKey) return;
+    let running = true;
+    let consecutiveFailures = 0;
 
-    const unsub = forPullKey(pullKey).addListener((data: Record<string, unknown>) => {
-      setConnected(true);
+    const poll = async () => {
+      if (!running) return;
 
-      const loc = data.location as { latitude: number; longitude: number } | undefined;
-      if (!loc || loc.latitude == null || loc.longitude == null) return;
+      const loc = await fetchCurrentLocation();
+      if (!running) return;
 
-      const lng = loc.longitude;
-      const lat = loc.latitude;
-      const now = Date.now();
+      if (loc) {
+        consecutiveFailures = 0;
+        setConnected(true);
+        setCurrentLocation(loc);
 
-      setCurrentLocation({ lng, lat });
+        const now = Date.now();
+        const current = trackingRef.current;
 
-      // Throttle to every 10 minutes
-      const current = trackingRef.current;
-      if (current.lastPersistTime && now - current.lastPersistTime < PERSIST_INTERVAL_MS) {
-        return;
+        // Throttle to every 10 minutes for persisted points
+        if (current.lastPersistTime && now - current.lastPersistTime < PERSIST_INTERVAL_MS) {
+          return;
+        }
+
+        const todayKey = getLocalDate(now);
+        const newPoint = { coordinates: [loc.lng, loc.lat] as [number, number], timestamp: now };
+
+        setTracking((prev: TrackingData) => {
+          const steps = [...prev.steps];
+          let currentDayKey = prev.currentDayKey;
+          let lastStep = steps.length > 0 ? steps[steps.length - 1] : null;
+          let needsServerSave = false;
+
+          if (todayKey !== currentDayKey) {
+            needsServerSave = true;
+            currentDayKey = todayKey;
+            const dayNumber = steps.length + 1;
+
+            const newStep: SubabikeStep = {
+              id: `day-${todayKey}`,
+              dayNumber,
+              name: '...',
+              date: todayKey,
+              points: [newPoint],
+            };
+            steps.push(newStep);
+            lastStep = newStep;
+
+            reverseGeocode(loc.lng, loc.lat).then((name: string) => {
+              setTracking((p: TrackingData) => {
+                const updated = {
+                  ...p,
+                  steps: p.steps.map((s: SubabikeStep) =>
+                    s.id === newStep.id ? { ...s, name } : s
+                  ),
+                };
+                saveToStorage(updated);
+                saveToServer(updated);
+                return updated;
+              });
+            });
+          } else if (lastStep) {
+            const updatedStep = { ...lastStep, points: [...lastStep.points, newPoint] };
+            steps[steps.length - 1] = updatedStep;
+          } else {
+            needsServerSave = true;
+            currentDayKey = todayKey;
+            const firstStep: SubabikeStep = {
+              id: `day-${todayKey}`,
+              dayNumber: 1,
+              name: '...',
+              date: todayKey,
+              points: [newPoint],
+            };
+            steps.push(firstStep);
+
+            reverseGeocode(loc.lng, loc.lat).then((name: string) => {
+              setTracking((p: TrackingData) => {
+                const updated = {
+                  ...p,
+                  steps: p.steps.map((s: SubabikeStep) =>
+                    s.id === firstStep.id ? { ...s, name } : s
+                  ),
+                };
+                saveToStorage(updated);
+                saveToServer(updated);
+                return updated;
+              });
+            });
+          }
+
+          const result: TrackingData = { steps, currentDayKey, lastPersistTime: now };
+          if (needsServerSave) saveToServerDebounced(result);
+          return result;
+        });
+      } else {
+        consecutiveFailures++;
+        // Don't flip to "disconnected" on transient failures
+        if (consecutiveFailures > 10) {
+          setConnected(false);
+        }
       }
+    };
 
-      const todayKey = getLocalDate(now);
-      const newPoint = { coordinates: [lng, lat] as [number, number], timestamp: now };
+    // Initial poll
+    poll();
 
-      setTracking((prev: TrackingData) => {
-        const steps = [...prev.steps];
-        let currentDayKey = prev.currentDayKey;
-        let lastStep = steps.length > 0 ? steps[steps.length - 1] : null;
+    // Periodic polling
+    const interval = setInterval(poll, POLL_INTERVAL_MS);
+    return () => {
+      running = false;
+      clearInterval(interval);
+    };
+  }, [saveToServerDebounced]);
 
-        let needsServerSave = false;
-
-        // Check if it's a new day (different from current tracking day)
-        if (todayKey !== currentDayKey) {
-          needsServerSave = true; // new step → save to server
-          currentDayKey = todayKey;
-          const dayNumber = steps.length + 1;
-
-          // Create new step
-          const newStep: SubabikeStep = {
-            id: `day-${todayKey}`,
-            dayNumber,
-            name: '...', // placeholder, filled async via reverse geocode
-            date: todayKey,
-            points: [newPoint],
-          };
-          steps.push(newStep);
-          lastStep = newStep;
-
-          // Reverse geocode asynchronously
-          reverseGeocode(lng, lat).then((name: string) => {
-            setTracking((p: TrackingData) => {
-              const updated = {
-                ...p,
-                steps: p.steps.map((s: SubabikeStep) =>
-                  s.id === newStep.id ? { ...s, name } : s
-                ),
-              };
-              saveToStorage(updated);
-              saveToServer(updated);
-              return updated;
-            });
-          });
-        } else if (lastStep) {
-          // Same day — append point to existing step
-          const updatedStep = { ...lastStep, points: [...lastStep.points, newPoint] };
-          steps[steps.length - 1] = updatedStep;
-        } else {
-          // First-ever point, no steps exist yet
-          needsServerSave = true;
-          currentDayKey = todayKey;
-          const firstStep: SubabikeStep = {
-            id: `day-${todayKey}`,
-            dayNumber: 1,
-            name: '...',
-            date: todayKey,
-            points: [newPoint],
-          };
-          steps.push(firstStep);
-
-          reverseGeocode(lng, lat).then((name: string) => {
-            setTracking((p: TrackingData) => {
-              const updated = {
-                ...p,
-                steps: p.steps.map((s: SubabikeStep) =>
-                  s.id === firstStep.id ? { ...s, name } : s
-                ),
-              };
-              saveToStorage(updated);
-              saveToServer(updated);
-              return updated;
-            });
-          });
-        }
-
-        const result: TrackingData = { steps, currentDayKey, lastPersistTime: now };
-
-        // Debounced server save
-        if (needsServerSave) {
-          saveToServerDebounced(result);
-        }
-
-        return result;
-      });
-    });
-
-    return () => { unsub(); };
-  }, [pullKey, saveToServerDebounced]);
-
-  // Manually reset tracking (for testing)
   const resetTracking = useCallback(() => {
-    const empty: TrackingData = { steps: [], currentDayKey: null, lastPersistTime: null };
-    setTracking(empty);
-    saveToStorage(empty);
-    saveToServer(empty);
+    const emptyData = empty();
+    setTracking(emptyData);
+    saveToStorage(emptyData);
+    saveToServer(emptyData);
   }, []);
 
-  return { tracking, currentLocation, connected, resetTracking, serverAvailable };
+  return { tracking, currentLocation, connected, resetTracking, loaded };
 }

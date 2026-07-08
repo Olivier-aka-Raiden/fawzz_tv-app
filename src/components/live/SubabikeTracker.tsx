@@ -7,7 +7,6 @@ import useSubabikeTracking from '../../hooks/useSubabikeTracking';
 import type { TrackPoint, SubabikeStep } from '../../data/subabike';
 
 const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN;
-const PULL_KEY = import.meta.env.VITE_PULL_KEY || '';
 const ROUTE_COLOR = '#9146FF';  // Twitch purple
 const ROUTE_DIM_COLOR = '#4a4a5a';
 
@@ -28,7 +27,7 @@ function pointsToGeoJSON(points: TrackPoint[]) {
 
 export default function SubabikeTracker() {
   const { t } = useTranslation();
-  const { tracking, currentLocation, connected } = useSubabikeTracking(PULL_KEY);
+  const { tracking, currentLocation, connected } = useSubabikeTracking();
   const mapRef = useRef<MapRef>(null);
   const sliderRef = useRef<HTMLDivElement>(null);
 
@@ -154,12 +153,10 @@ export default function SubabikeTracker() {
             {t('subabike.title', 'SubaBike Tracker')}
           </h3>
           {/* Connection status */}
-          {PULL_KEY && (
-            <span className={`flex items-center gap-1 text-[10px] ${connected ? 'text-green-400' : 'text-gray-600'}`}>
-              {connected ? <Wifi size={10} /> : <WifiOff size={10} />}
-              {connected ? 'Live' : 'Waiting'}
-            </span>
-          )}
+          <span className={`flex items-center gap-1 text-[10px] ${connected ? 'text-green-400' : 'text-gray-600'}`}>
+            {connected ? <Wifi size={10} /> : <WifiOff size={10} />}
+            {connected ? 'Live' : 'Waiting'}
+          </span>
         </div>
         <button
           onClick={() => setCollapsed(!collapsed)}
@@ -261,20 +258,16 @@ export default function SubabikeTracker() {
             )}
           </Map>
 
-          {/* Empty overlay when no data */}
-          {totalSteps === 0 && PULL_KEY && (
+          {/* Empty overlay when no data yet */}
+          {totalSteps === 0 && (
             <div className="absolute inset-0 flex items-center justify-center bg-gray-950/60 pointer-events-none">
               <div className="text-center">
                 <MapPin size={32} className="text-gray-600 mx-auto mb-2" />
-                <p className="text-sm text-gray-500">{connected ? t('subabike.waitingLocation', 'Waiting for GPS data...') : t('subabike.connecting', 'Connecting...')}</p>
-              </div>
-            </div>
-          )}
-          {!PULL_KEY && (
-            <div className="absolute inset-0 flex items-center justify-center bg-gray-950/60 pointer-events-none">
-              <div className="text-center">
-                <MapPin size={32} className="text-gray-600 mx-auto mb-2" />
-                <p className="text-sm text-gray-500">{t('subabike.noPullKey', 'Tracker not configured')}</p>
+                <p className="text-sm text-gray-500">
+                  {connected
+                    ? t('subabike.waitingLocation', 'Waiting for GPS data...')
+                    : t('subabike.connecting', 'Connecting...')}
+                </p>
               </div>
             </div>
           )}

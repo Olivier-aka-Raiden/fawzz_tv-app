@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { ExternalLink, Tv } from 'lucide-react';
 import { updateTwitchLiveStatus, useTwitchLive } from '../../hooks/useTwitchLive';
+import SubabikeTracker from './SubabikeTracker';
 
 const CHANNEL = 'fawzz_tv';
 
@@ -149,6 +150,10 @@ export default function Live() {
           {t('live.cta')}
         </a>
       </motion.div>
+
+      {/* SubaBike Tracker */}
+      <SubabikeTracker />
+
     </section>
   );
 }

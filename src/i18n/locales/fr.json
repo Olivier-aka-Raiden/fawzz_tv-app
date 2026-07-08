@@ -124,6 +124,14 @@
     "liveNow": "En direct",
     "offline": "Hors ligne"
   },
+  "subabike": {
+    "title": "Suivi SubaBike",
+    "selected": "Sélectionné",
+    "stops": "étapes",
+    "days": "jours",
+    "fullRoute": "Parcours complet",
+    "sliderHint": "Déplacez les poignées pour choisir votre segment"
+  },
   "sponsors": {
     "title": "Sponsors",
     "subtitle": "Les marques et partenaires qui soutiennent la chaîne. Découvrez leurs produits et profitez des codes promo exclusifs.",

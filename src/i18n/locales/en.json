@@ -124,6 +124,18 @@
     "liveNow": "Live now",
     "offline": "Offline"
   },
+  "subabike": {
+    "title": "SubaBike Tracker",
+    "selected": "Selected",
+    "stops": "stops",
+    "days": "days",
+    "day": "day",
+    "fullRoute": "Full route",
+    "sliderHint": "Drag the handles to choose your segment",
+    "waitingLocation": "Waiting for GPS data…",
+    "connecting": "Connecting…",
+    "noPullKey": "Tracker not configured"
+  },
   "sponsors": {
     "title": "Sponsors",
     "subtitle": "The brands and partners supporting the channel. Discover their products and enjoy exclusive promo codes.",

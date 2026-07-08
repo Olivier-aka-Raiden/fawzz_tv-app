@@ -1,11 +1,12 @@
 /**
  * Vercel serverless function — proxies RTIRL location reads.
  *
- * GET /api/location → { latitude, longitude } | null
+ * GET /api/location → { latitude, longitude } | { error: string }
  *
- * Uses the server-side PULL_KEY (never exposed to the browser).
- * Does a one-shot Firebase read: subscribe → get value → immediately unsubscribe.
- * The client polls every 30s — each request lasts only a few ms.
+ * Uses Firebase REST API directly (no native bindings — works on Vercel).
+ * RTIRL stores location data at:
+ *   https://rtirl-a1d7f-default-rtdb.firebaseio.com/pullables/{pullKey}/location.json
+ * The client polls every 30s.
  */
 
 const CORS_HEADERS: Record<string, string> = {
@@ -13,44 +14,59 @@ const CORS_HEADERS: Record<string, string> = {
   'Access-Control-Allow-Origin': '*',
 };
 
+const FIREBASE_DB = 'https://rtirl-a1d7f-default-rtdb.firebaseio.com';
+
 export async function GET(): Promise<Response> {
   const pullKey = process.env.PULL_KEY;
+  console.log('[SubaBike API] GET /api/location called. PULL_KEY present:', !!pullKey);
+
   if (!pullKey) {
-    return new Response(JSON.stringify(null), { status: 200, headers: CORS_HEADERS });
+    console.warn('[SubaBike API] ❌ PULL_KEY is not set in environment variables');
+    return new Response(
+      JSON.stringify({ error: 'PULL_KEY not configured' }),
+      { status: 200, headers: CORS_HEADERS }
+    );
   }
 
   try {
-    // Dynamic import — @rtirl/api initializes Firebase which may fail in serverless.
-    // If it fails, we return null gracefully (client will retry next poll).
-    let forPullKey: (key: string) => {
-      addLocationListener: (cb: (loc: { latitude: number; longitude: number }) => void) => () => void;
-    };
-    try {
-      const api = await import('@rtirl/api');
-      forPullKey = api.forPullKey;
-    } catch {
+    const url = `${FIREBASE_DB}/pullables/${pullKey}/location.json`;
+    console.log('[SubaBike API] 🔄 Fetching:', url.replace(pullKey, '***'));
+
+    const res = await fetch(url);
+    console.log('[SubaBike API] Firebase response:', res.status, res.statusText);
+
+    if (!res.ok) {
+      console.warn('[SubaBike API] ⚠️ Firebase returned non-OK:', res.status);
+      return new Response(
+        JSON.stringify({ error: `Firebase returned ${res.status}` }),
+        { status: 200, headers: CORS_HEADERS }
+      );
+    }
+
+    const text = await res.text();
+    console.log('[SubaBike API] Raw response body:', text);
+
+    // Firebase returns "null" (string) when no data exists
+    if (!text || text === 'null') {
+      console.log('[SubaBike API] 📭 No location data (null)');
       return new Response(JSON.stringify(null), { status: 200, headers: CORS_HEADERS });
     }
 
-    const location = await new Promise<{ latitude: number; longitude: number } | null>((resolve) => {
-      const timeout = setTimeout(() => resolve(null), 5000);
+    const location = JSON.parse(text);
+    console.log('[SubaBike API] 📍 Location received:', JSON.stringify(location));
 
-      let unsub: (() => void) | undefined;
-      try {
-        unsub = forPullKey(pullKey).addLocationListener((loc) => {
-          clearTimeout(timeout);
-          try { unsub?.(); } catch { /* ignore */ }
-          resolve(loc && typeof loc.latitude === 'number' ? loc : null);
-        });
-      } catch {
-        clearTimeout(timeout);
-        resolve(null);
-      }
-    });
+    if (location && typeof location.latitude === 'number' && typeof location.longitude === 'number') {
+      return new Response(JSON.stringify(location), { status: 200, headers: CORS_HEADERS });
+    }
 
-    return new Response(JSON.stringify(location), { status: 200, headers: CORS_HEADERS });
-  } catch {
+    console.warn('[SubaBike API] ⚠️ Invalid location format:', location);
     return new Response(JSON.stringify(null), { status: 200, headers: CORS_HEADERS });
+  } catch (err) {
+    console.error('[SubaBike API] ❌ Fetch failed:', err);
+    return new Response(
+      JSON.stringify({ error: 'Firebase fetch failed' }),
+      { status: 200, headers: CORS_HEADERS }
+    );
   }
 }
 

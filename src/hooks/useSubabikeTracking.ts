@@ -14,10 +14,36 @@ function empty(): TrackingData {
   return { steps: [], currentDayKey: null, lastPersistTime: null };
 }
 
+/** Validate and sanitize tracking data loaded from storage — strip NaN coordinates */
+function sanitize(data: TrackingData): TrackingData {
+  if (!data || !Array.isArray(data.steps)) return empty();
+  const cleanSteps = data.steps
+    .map(step => {
+      if (!step || !Array.isArray(step.points)) return null;
+      const cleanPoints = step.points.filter(
+        p => p && Array.isArray(p.coordinates) &&
+          p.coordinates.length === 2 &&
+          Number.isFinite(p.coordinates[0]) &&
+          Number.isFinite(p.coordinates[1])
+      );
+      if (cleanPoints.length === 0) return null;
+      return { ...step, points: cleanPoints };
+    })
+    .filter((s): s is SubabikeStep => s !== null);
+  return { steps: cleanSteps, currentDayKey: data.currentDayKey || null, lastPersistTime: data.lastPersistTime || null };
+}
+
 function loadFromStorage(): TrackingData {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    if (raw) return JSON.parse(raw);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      const cleaned = sanitize(parsed);
+      if (cleaned.steps.length !== parsed?.steps?.length) {
+        console.warn('[SubaBike Hook] 🧹 Sanitized localStorage data — removed corrupted steps');
+      }
+      return cleaned;
+    }
   } catch { /* ignore */ }
   return empty();
 }
@@ -34,7 +60,6 @@ interface GeocodeFeature {
   properties: { short_code?: string };
 }
 
-/** Reverse geocode using the RTIRL project's approach: request all types, pick the most specific. */
 async function reverseGeocode(lng: number, lat: number): Promise<string> {
   const token = import.meta.env.VITE_MAPBOX_TOKEN;
   if (!token) return 'Unknown';
@@ -44,23 +69,18 @@ async function reverseGeocode(lng: number, lat: number): Promise<string> {
     );
     const data = await res.json();
     const features: GeocodeFeature[] = data.features || [];
-
-    // Find features by type (same priority as RTIRL project)
     const find = (type: string) => features.find(f => f.place_type.includes(type));
-
     const locality = find('locality');
     const place = find('place');
     const neighborhood = find('neighborhood');
     const region = find('region');
     const country = find('country');
-
-    // Smart selection: most specific first
-    if (locality && place) return locality.text;        // e.g. "Montbéliard"
+    if (locality && place) return locality.text;
     if (neighborhood && locality) return locality.text;
-    if (neighborhood && place) return place.text;       // fallback: town name
+    if (neighborhood && place) return place.text;
     if (place) return place.text;
-    if (region) return region.text;                     // e.g. "Bourgogne-Franche-Comté"
-    if (country) return country.text;                   // e.g. "France"
+    if (region) return region.text;
+    if (country) return country.text;
     if (features.length > 0) return features[0].text;
   } catch { /* ignore */ }
   return 'Unknown';
@@ -71,8 +91,10 @@ async function fetchFromServer(): Promise<TrackingData | null> {
     const res = await fetch('/api/tracking');
     if (!res.ok) return null;
     const data = await res.json();
-    if (data?.steps?.length > 0) return data;
-  } catch { /* ignore */ }
+    if (data?.steps?.length > 0) return sanitize(data);
+  } catch (err) {
+    console.warn('[SubaBike Hook] fetchFromServer failed:', err);
+  }
   return null;
 }
 
@@ -88,16 +110,29 @@ async function saveToServer(data: TrackingData): Promise<boolean> {
   return false;
 }
 
-/** Poll the server-side proxy for current GPS location. Pull key stays server-side. */
 async function fetchCurrentLocation(): Promise<{ lng: number; lat: number } | null> {
   try {
     const res = await fetch('/api/location');
     if (!res.ok) return null;
     const data = await res.json();
-    if (data && typeof data.latitude === 'number' && typeof data.longitude === 'number') {
+    // Validate before returning — block NaN at the boundary
+    if (
+      data &&
+      typeof data.latitude === 'number' &&
+      typeof data.longitude === 'number' &&
+      Number.isFinite(data.latitude) &&
+      Number.isFinite(data.longitude) &&
+      data.latitude >= -90 && data.latitude <= 90 &&
+      data.longitude >= -180 && data.longitude <= 180
+    ) {
       return { lng: data.longitude, lat: data.latitude };
     }
-  } catch { /* ignore */ }
+    if (data?.error) {
+      console.warn('[SubaBike Hook] ⚠️ API error:', data.error);
+    }
+  } catch (err) {
+    console.error('[SubaBike Hook] ❌ fetchCurrentLocation:', err);
+  }
   return null;
 }
 
@@ -109,7 +144,7 @@ export default function useSubabikeTracking() {
   const trackingRef = useRef(tracking);
   trackingRef.current = tracking;
 
-  // Load from server on init (takes priority over localStorage)
+  // Load from server on init
   useEffect(() => {
     fetchFromServer().then(serverData => {
       if (serverData && serverData.steps.length > 0) {
@@ -139,6 +174,10 @@ export default function useSubabikeTracking() {
     saveToServer(data);
   }, []);
 
+  // State dedup ref — avoid setting same state repeatedly
+  const prevConnected = useRef(false);
+  const prevLocKey = useRef('');
+
   // Poll the server-side location proxy
   useEffect(() => {
     let running = true;
@@ -152,13 +191,22 @@ export default function useSubabikeTracking() {
 
       if (loc) {
         consecutiveFailures = 0;
-        setConnected(true);
-        setCurrentLocation(loc);
+
+        // Dedup: only update state if location changed meaningfully
+        const newKey = `${loc.lat.toFixed(6)},${loc.lng.toFixed(6)}`;
+        const changed = newKey !== prevLocKey.current;
+        prevLocKey.current = newKey;
+
+        if (changed || !prevConnected.current) {
+          setCurrentLocation(loc);
+          setConnected(true);
+          prevConnected.current = true;
+        }
 
         const now = Date.now();
         const current = trackingRef.current;
 
-        // Throttle to every 10 minutes for persisted points
+        // Throttle to PERSIST_INTERVAL_MS for persisted points
         if (current.lastPersistTime && now - current.lastPersistTime < PERSIST_INTERVAL_MS) {
           return;
         }
@@ -176,6 +224,7 @@ export default function useSubabikeTracking() {
             needsServerSave = true;
             currentDayKey = todayKey;
             const dayNumber = steps.length + 1;
+            console.log('[SubaBike Hook] 🌅 New day:', todayKey, 'day', dayNumber);
 
             const newStep: SubabikeStep = {
               id: `day-${todayKey}`,
@@ -185,9 +234,8 @@ export default function useSubabikeTracking() {
               points: [newPoint],
             };
             steps.push(newStep);
-            lastStep = newStep;
 
-            reverseGeocode(loc.lng, loc.lat).then((name: string) => {
+            reverseGeocode(loc.lng, loc.lat).then(name => {
               setTracking((p: TrackingData) => {
                 const updated = {
                   ...p,
@@ -201,8 +249,7 @@ export default function useSubabikeTracking() {
               });
             });
           } else if (lastStep) {
-            const updatedStep = { ...lastStep, points: [...lastStep.points, newPoint] };
-            steps[steps.length - 1] = updatedStep;
+            steps[steps.length - 1] = { ...lastStep, points: [...lastStep.points, newPoint] };
           } else {
             needsServerSave = true;
             currentDayKey = todayKey;
@@ -215,7 +262,7 @@ export default function useSubabikeTracking() {
             };
             steps.push(firstStep);
 
-            reverseGeocode(loc.lng, loc.lat).then((name: string) => {
+            reverseGeocode(loc.lng, loc.lat).then(name => {
               setTracking((p: TrackingData) => {
                 const updated = {
                   ...p,
@@ -236,17 +283,17 @@ export default function useSubabikeTracking() {
         });
       } else {
         consecutiveFailures++;
-        // Don't flip to "disconnected" on transient failures
         if (consecutiveFailures > 10) {
-          setConnected(false);
+          if (prevConnected.current) {
+            console.warn('[SubaBike Hook] 🔴 Disconnected after 10 failures');
+            prevConnected.current = false;
+            setConnected(false);
+          }
         }
       }
     };
 
-    // Initial poll
     poll();
-
-    // Periodic polling
     const interval = setInterval(poll, POLL_INTERVAL_MS);
     return () => {
       running = false;
@@ -259,6 +306,10 @@ export default function useSubabikeTracking() {
     setTracking(emptyData);
     saveToStorage(emptyData);
     saveToServer(emptyData);
+    prevLocKey.current = '';
+    prevConnected.current = false;
+    setCurrentLocation(null);
+    setConnected(false);
   }, []);
 
   return { tracking, currentLocation, connected, resetTracking, loaded };

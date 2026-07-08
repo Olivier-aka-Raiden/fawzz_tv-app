@@ -129,8 +129,12 @@
     "selected": "Selected",
     "stops": "stops",
     "days": "days",
+    "day": "day",
     "fullRoute": "Full route",
-    "sliderHint": "Drag the handles to choose your segment"
+    "sliderHint": "Drag the handles to choose your segment",
+    "waitingLocation": "Waiting for GPS data…",
+    "connecting": "Connecting…",
+    "noPullKey": "Tracker not configured"
   },
   "sponsors": {
     "title": "Sponsors",

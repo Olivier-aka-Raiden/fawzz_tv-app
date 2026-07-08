@@ -129,8 +129,12 @@
     "selected": "Sélectionné",
     "stops": "étapes",
     "days": "jours",
+    "day": "jour",
     "fullRoute": "Parcours complet",
-    "sliderHint": "Déplacez les poignées pour choisir votre segment"
+    "sliderHint": "Déplacez les poignées pour choisir votre segment",
+    "waitingLocation": "En attente des données GPS…",
+    "connecting": "Connexion en cours…",
+    "noPullKey": "Tracker non configuré"
   },
   "sponsors": {
     "title": "Sponsors",

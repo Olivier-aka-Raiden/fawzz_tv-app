@@ -14,6 +14,7 @@ const STAT_LABEL_KEYS: Record<string, string> = {
 export default function AdventureCard({ project, index }: { project: Project; index: number }) {
   const { t } = useTranslation();
   const tk = (suffix: string) => project.tKey ? t(`${project.tKey}.${suffix}`, project[suffix as keyof Project] as string) : (project as any)[suffix];
+  const tv = (label: string, fallback: string) => project.tKey ? t(`${project.tKey}.statValue.${label}`, fallback) : fallback;
 
   const card = (
     <motion.article
@@ -53,7 +54,7 @@ export default function AdventureCard({ project, index }: { project: Project; in
                   <span className="text-gray-600 text-sm font-normal">{t('adventures.comingSoon')}</span>
                 </span>
               ) : (
-                stat.value
+                tv(stat.label, stat.value)
               )}
             </div>
             <div className="text-xs text-gray-500">

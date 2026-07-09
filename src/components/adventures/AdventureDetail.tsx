@@ -33,6 +33,7 @@ export default function AdventureDetail() {
 
   // Derived values (not hooks — safe to compute before early returns)
   const tk = (suffix: string) => project?.tKey ? t(`${project.tKey}.${suffix}`, (project as any)[suffix]) : (project as any)?.[suffix];
+  const tv = (label: string, fallback: string) => project?.tKey ? t(`${project.tKey}.statValue.${label}`, fallback) : fallback;
   const route = project ? ROUTES.find(r => r.id === project.routeId) : undefined;
   const hasDates = !!(project?.dates?.start && project?.dates?.end);
 
@@ -150,7 +151,7 @@ export default function AdventureDetail() {
             key={stat.label}
             className="bg-gray-900 border border-gray-800 rounded-xl p-5 text-center hover:border-gray-700 transition-colors"
           >
-            <div className="text-2xl md:text-3xl font-bold text-white">{stat.value}</div>
+            <div className="text-2xl md:text-3xl font-bold text-white">{tv(stat.label, stat.value)}</div>
             <div className="text-xs text-gray-500 mt-1.5 uppercase tracking-wider">
               {t(STAT_LABEL_KEYS[stat.label] || stat.label, stat.label)}
             </div>
@@ -315,7 +316,7 @@ export default function AdventureDetail() {
                       </p>
                       <div className="flex gap-4 mt-3 text-xs text-gray-500">
                         {p.stats.slice(0, 2).map(s => (
-                          <span key={s.label}>{s.value} {t(STAT_LABEL_KEYS[s.label] || s.label, s.label).toLowerCase()}</span>
+                          <span key={s.label}>{p.tKey ? t(`${p.tKey}.statValue.${s.label}`, s.value) : s.value} {t(STAT_LABEL_KEYS[s.label] || s.label, s.label).toLowerCase()}</span>
                         ))}
                       </div>
                     </Link>

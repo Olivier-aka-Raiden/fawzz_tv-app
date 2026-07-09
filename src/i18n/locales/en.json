@@ -60,6 +60,12 @@
         "duration": "Duration",
         "stream": "Stream",
         "watch": "Watch (h)",
+        "statValue": {
+          "Distance": "1,000 km",
+          "Durée": "11 days",
+          "Stream": "110 h",
+          "Watch": "21.2K"
+        },
         "highlights": [
           "First complete live crossing of France by bike",
           "Arrival on the Mediterranean after 1,000 km",
@@ -72,6 +78,12 @@
         "description": "13 days from Lille to Copenhagen. Through Amsterdam, then a boat crossing to Denmark and the road to the Danish capital.",
         "badge": "2023",
         "story": "Building on the first edition's success, the 2023 adventure changed its starting point: heading out from Lille. Through Brussels, Antwerp, then Amsterdam before pointing north. One boat crossing later, Copenhagen was in sight. With 1,000 km covered and 4 countries crossed, this edition proved the long-distance self-sufficient format was viable — and that the community was ready to follow for the long haul.",
+        "statValue": {
+          "Distance": "1,000 km",
+          "Durée": "13 days",
+          "Stream": "156 h",
+          "Watch": "7.9K"
+        },
         "highlights": [
           "Departure from Lille, through Belgium and the Netherlands",
           "Stop in Amsterdam, then heading to the sea",
@@ -85,6 +97,12 @@
         "description": "The SubaBike format was born: each subscription adds kilometers instead of time. 34 days of international adventure where the community decides the route in real time.",
         "badge": "2024 • SubaBike",
         "story": "The 2024 edition changed everything with the SubaBike format: each subscription adds kilometers to the route. One donor blew up the counter by adding 1,700 km in one go. The result: 34 days of streaming, 5 countries crossed, and an adventure whose script was literally written by the community in real time.",
+        "statValue": {
+          "Distance": "2,700 km",
+          "Durée": "34 days",
+          "Stream": "286 h",
+          "Watch": "64K"
+        },
         "highlights": [
           "New SubaBike format: subs extend the route",
           "Detour Sète → Béziers → Narbonne → Sète for the community",

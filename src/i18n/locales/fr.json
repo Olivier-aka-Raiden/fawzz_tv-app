@@ -64,7 +64,13 @@
           "Première traversée complète de la France à vélo en live",
           "Arrivée sur la Méditerranée après 1 000 km",
           "Naissance du format d'aventure communautaire sur la chaîne"
-        ]
+        ],
+        "statValue": {
+          "Distance": "1 000 km",
+          "Durée": "11 jours",
+          "Stream": "110 h",
+          "Watch": "21.2K"
+        }
       },
       "2023": {
         "title": "Lille → Copenhague",
@@ -72,6 +78,12 @@
         "description": "De Lille à Copenhague en 13 jours. Passage par Amsterdam, puis traversée en bateau vers le Danemark et route jusqu'à la capitale danoise.",
         "badge": "2023",
         "story": "Forte du succès de la première édition, l'aventure 2023 change de point de départ : direction Lille. Passage par Bruxelles, Anvers, puis Amsterdam avant de mettre le cap au nord. Une traversée en bateau plus tard, Copenhague est en vue. Avec 1 000 km au compteur et 4 pays traversés, cette édition a confirmé que le format longue distance en autonomie était viable — et que la communauté était prête à suivre sur la durée.",
+        "statValue": {
+          "Distance": "1 000 km",
+          "Durée": "13 jours",
+          "Stream": "156 h",
+          "Watch": "7.9K"
+        },
         "highlights": [
           "Départ de Lille, passage par la Belgique et les Pays-Bas",
           "Arrêt à Amsterdam, puis direction la mer",
@@ -85,6 +97,12 @@
         "description": "Le format SubaBike est né : chaque abonnement ajoute des kilomètres au lieu de temps. 34 jours d'aventure internationale où la communauté décide de la route en temps réel.",
         "badge": "2024 • SubaBike",
         "story": "L'édition 2024 a tout changé avec l'introduction du format SubaBike : chaque abonnement ajoute des kilomètres au parcours. Un donateur a fait exploser le compteur en ajoutant 1 700 km d'un coup. Résultat : 34 jours de stream, 5 pays traversés, et une aventure dont la communauté a littéralement écrit le scénario en temps réel.",
+        "statValue": {
+          "Distance": "2 700 km",
+          "Durée": "34 jours",
+          "Stream": "286 h",
+          "Watch": "64K"
+        },
         "highlights": [
           "Format SubaBike inédit : les subs allongent le parcours",
           "Détour Sète → Béziers → Narbonne → Sète pour la communauté",

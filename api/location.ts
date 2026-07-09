@@ -13,7 +13,7 @@
  * frontend can stop showing a live pulsar dot and "Live" status.
  */
 
-import { Redis } from '@upstash/redis';
+import { getRedis } from './lib/redis';
 
 const STALE_THRESHOLD_MS = 11 * 60 * 1000; // 11 minutes
 
@@ -30,13 +30,6 @@ interface LocationState {
   coordHash: string;
   /** Unix ms when this location was FIRST seen */
   firstSeenAt: number;
-}
-
-function getRedis(): Redis | null {
-  const url = process.env.fawzztv_KV_REST_API_URL;
-  const token = process.env.fawzztv_KV_REST_API_TOKEN;
-  if (!url || !token) return null;
-  return new Redis({ url, token });
 }
 
 export async function GET(): Promise<Response> {
@@ -128,8 +121,21 @@ export async function OPTIONS(): Promise<Response> {
     status: 204,
     headers: {
       'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'GET, OPTIONS',
+      'Access-Control-Allow-Methods': 'GET, DELETE, OPTIONS',
       'Access-Control-Allow-Headers': 'Content-Type',
     },
   });
+}
+
+/** Clear staleness state — called when tracking is reset */
+export async function DELETE(): Promise<Response> {
+  try {
+    const redis = getRedis();
+    if (redis) await redis.del(STATE_KEY);
+    console.log('[SubaBike API] 🧹 Location state cleared');
+    return new Response(JSON.stringify({ ok: true }), { status: 200, headers: CORS_HEADERS });
+  } catch (err) {
+    console.error('[SubaBike API] ❌ DELETE failed:', err);
+    return new Response(JSON.stringify({ ok: false }), { status: 200, headers: CORS_HEADERS });
+  }
 }

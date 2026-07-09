@@ -55,12 +55,19 @@ export function saveToStorage(data: TrackingData) {
 
 export async function fetchFromServer(): Promise<TrackingData | null> {
   try {
-    const res = await fetch('/api/tracking');
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 8_000);
+    const res = await fetch('/api/tracking', { signal: controller.signal });
+    clearTimeout(timeout);
     if (!res.ok) return null;
     const data = await res.json();
     if (data?.steps?.length > 0) return sanitize(data);
   } catch (err) {
-    console.warn('[SubaBike Hook] fetchFromServer failed:', err);
+    if (err instanceof DOMException && err.name === 'AbortError') {
+      console.warn('[SubaBike Persist] ⏱ /api/tracking timed out');
+    } else {
+      console.warn('[SubaBike Persist] fetchFromServer failed:', err);
+    }
   }
   return null;
 }

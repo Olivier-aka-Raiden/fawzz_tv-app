@@ -56,7 +56,21 @@ export default function useSubabikeTracking() {
 
   // Load from server on init — server is the single source of truth
   useEffect(() => {
+    let cancelled = false;
+
+    // Safety timeout: force loaded=true after 12s even if fetch hangs
+    const safetyTimer = setTimeout(() => {
+      if (!cancelled) {
+        console.warn('[SubaBike Hook] ⏱ Init safety timeout — forcing loaded');
+        const localData = loadFromStorage();
+        if (localData.steps.length > 0) setTracking(localData);
+        setLoaded(true);
+      }
+    }, 12_000);
+
     fetchFromServer().then(serverData => {
+      if (cancelled) return;
+      clearTimeout(safetyTimer);
       if (serverData && serverData.steps.length > 0) {
         setTracking(serverData);
         saveToStorage(serverData);
@@ -67,7 +81,16 @@ export default function useSubabikeTracking() {
         }
       }
       setLoaded(true);
+    }).catch(err => {
+      if (cancelled) return;
+      clearTimeout(safetyTimer);
+      console.warn('[SubaBike Hook] Init fetch failed:', err);
+      const localData = loadFromStorage();
+      if (localData.steps.length > 0) setTracking(localData);
+      setLoaded(true);
     });
+
+    return () => { cancelled = true; };
   }, []);
 
   // Persist to localStorage on every change (mirror only)

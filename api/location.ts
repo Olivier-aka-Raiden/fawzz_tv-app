@@ -1,13 +1,21 @@
 /**
  * Vercel serverless function — proxies RTIRL location reads.
  *
- * GET /api/location → { latitude, longitude } | { error: string }
+ * GET /api/location → { latitude, longitude, stale?: boolean } | { error: string }
  *
  * Uses Firebase REST API directly (no native bindings — works on Vercel).
  * RTIRL stores location data at:
  *   https://rtirl-a1d7f-default-rtdb.firebaseio.com/pullables/{pullKey}/location.json
  * The client polls every 30s.
+ *
+ * Staleness detection: compares current location with last known (stored in Redis).
+ * If coordinates haven't changed for > 11 minutes, returns stale: true so the
+ * frontend can stop showing a live pulsar dot and "Live" status.
  */
+
+import { Redis } from '@upstash/redis';
+
+const STALE_THRESHOLD_MS = 11 * 60 * 1000; // 11 minutes
 
 const CORS_HEADERS: Record<string, string> = {
   'Content-Type': 'application/json',
@@ -15,6 +23,21 @@ const CORS_HEADERS: Record<string, string> = {
 };
 
 const FIREBASE_DB = 'https://rtirl-a1d7f-default-rtdb.firebaseio.com';
+const STATE_KEY = 'subabike-location-state';
+
+interface LocationState {
+  /** Hash of last known coordinates */
+  coordHash: string;
+  /** Unix ms when this location was FIRST seen */
+  firstSeenAt: number;
+}
+
+function getRedis(): Redis | null {
+  const url = process.env.fawzztv_KV_REST_API_URL;
+  const token = process.env.fawzztv_KV_REST_API_TOKEN;
+  if (!url || !token) return null;
+  return new Redis({ url, token });
+}
 
 export async function GET(): Promise<Response> {
   const pullKey = process.env.PULL_KEY;
@@ -56,7 +79,37 @@ export async function GET(): Promise<Response> {
     console.log('[SubaBike API] 📍 Location received:', JSON.stringify(location));
 
     if (location && typeof location.latitude === 'number' && typeof location.longitude === 'number') {
-      return new Response(JSON.stringify(location), { status: 200, headers: CORS_HEADERS });
+      // Staleness detection: compare with last known location in Redis
+      const coordHash = `${location.latitude.toFixed(6)},${location.longitude.toFixed(6)}`;
+      const now = Date.now();
+      let stale = false;
+
+      const redis = getRedis();
+      if (redis) {
+        try {
+          const prevState = await redis.get<LocationState>(STATE_KEY);
+          if (prevState && prevState.coordHash === coordHash) {
+            // Same location as before — check how long it's been
+            const age = now - prevState.firstSeenAt;
+            if (age > STALE_THRESHOLD_MS) {
+              stale = true;
+              console.log('[SubaBike API] 🕐 Location stale — unchanged for', Math.round(age / 1000), 's');
+            }
+          } else {
+            // New location or first time — update state
+            await redis.set(STATE_KEY, { coordHash, firstSeenAt: now });
+            console.log('[SubaBike API] 📝 Location state updated:', coordHash);
+          }
+        } catch (redisErr) {
+          console.warn('[SubaBike API] ⚠️ Redis state check failed:', redisErr);
+          // Degrade gracefully: no staleness detection without Redis
+        }
+      }
+
+      return new Response(
+        JSON.stringify({ latitude: location.latitude, longitude: location.longitude, stale }),
+        { status: 200, headers: CORS_HEADERS }
+      );
     }
 
     console.warn('[SubaBike API] ⚠️ Invalid location format:', location);

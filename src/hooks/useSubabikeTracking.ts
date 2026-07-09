@@ -62,19 +62,30 @@ interface GeocodeFeature {
 
 async function reverseGeocode(lng: number, lat: number): Promise<string> {
   const token = import.meta.env.VITE_MAPBOX_TOKEN;
-  if (!token) return 'Unknown';
+  if (!token) {
+    console.warn('[SubaBike Geocode] ❌ No VITE_MAPBOX_TOKEN');
+    return 'Unknown';
+  }
   try {
-    const res = await fetch(
-      `https://api.mapbox.com/geocoding/v5/mapbox.places/${lng},${lat}.json?language=fr&access_token=${token}`
-    );
+    const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${lng},${lat}.json?language=fr&access_token=${token}`;
+    console.log('[SubaBike Geocode] 🔍 Fetching:', `${lng},${lat}`);
+    const res = await fetch(url);
+    console.log('[SubaBike Geocode] Response:', res.status, res.statusText);
+    if (!res.ok) {
+      console.warn('[SubaBike Geocode] ⚠️ Non-OK status:', res.status);
+      return 'Unknown';
+    }
     const data = await res.json();
     const features: GeocodeFeature[] = data.features || [];
+    console.log('[SubaBike Geocode] Features found:', features.length);
+
     const find = (type: string) => features.find(f => f.place_type.includes(type));
     const locality = find('locality');
     const place = find('place');
     const neighborhood = find('neighborhood');
     const region = find('region');
     const country = find('country');
+
     if (locality && place) return locality.text;
     if (neighborhood && locality) return locality.text;
     if (neighborhood && place) return place.text;
@@ -82,7 +93,11 @@ async function reverseGeocode(lng: number, lat: number): Promise<string> {
     if (region) return region.text;
     if (country) return country.text;
     if (features.length > 0) return features[0].text;
-  } catch { /* ignore */ }
+
+    console.warn('[SubaBike Geocode] ⚠️ No recognizable feature types found');
+  } catch (err) {
+    console.error('[SubaBike Geocode] ❌ Failed:', err);
+  }
   return 'Unknown';
 }
 
@@ -110,7 +125,7 @@ async function saveToServer(data: TrackingData): Promise<boolean> {
   return false;
 }
 
-async function fetchCurrentLocation(): Promise<{ lng: number; lat: number } | null> {
+async function fetchCurrentLocation(): Promise<{ lng: number; lat: number; stale: boolean } | null> {
   try {
     const res = await fetch('/api/location');
     if (!res.ok) return null;
@@ -125,7 +140,7 @@ async function fetchCurrentLocation(): Promise<{ lng: number; lat: number } | nu
       data.latitude >= -90 && data.latitude <= 90 &&
       data.longitude >= -180 && data.longitude <= 180
     ) {
-      return { lng: data.longitude, lat: data.latitude };
+      return { lng: data.longitude, lat: data.latitude, stale: data.stale === true };
     }
     if (data?.error) {
       console.warn('[SubaBike Hook] ⚠️ API error:', data.error);
@@ -192,13 +207,23 @@ export default function useSubabikeTracking() {
       if (loc) {
         consecutiveFailures = 0;
 
+        if (loc.stale) {
+          // Location unchanged for > 11 min — app stopped sending new data
+          if (prevConnected.current) {
+            console.warn('[SubaBike Hook] 🕐 Location stale — treating as disconnected');
+            prevConnected.current = false;
+            setConnected(false);
+          }
+          return;
+        }
+
         // Dedup: only update state if location changed meaningfully
         const newKey = `${loc.lat.toFixed(6)},${loc.lng.toFixed(6)}`;
         const changed = newKey !== prevLocKey.current;
         prevLocKey.current = newKey;
 
         if (changed || !prevConnected.current) {
-          setCurrentLocation(loc);
+          setCurrentLocation({ lng: loc.lng, lat: loc.lat });
           setConnected(true);
           prevConnected.current = true;
         }

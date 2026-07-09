@@ -159,13 +159,14 @@ export default function useSubabikeTracking() {
   const trackingRef = useRef(tracking);
   trackingRef.current = tracking;
 
-  // Load from server on init
+  // Load from server on init — server is the single source of truth
   useEffect(() => {
     fetchFromServer().then(serverData => {
       if (serverData && serverData.steps.length > 0) {
         setTracking(serverData);
         saveToStorage(serverData);
       } else {
+        // Server unavailable or empty — fall back to localStorage mirror
         const localData = loadFromStorage();
         if (localData.steps.length > 0) {
           setTracking(localData);
@@ -275,6 +276,7 @@ export default function useSubabikeTracking() {
             });
           } else if (lastStep) {
             steps[steps.length - 1] = { ...lastStep, points: [...lastStep.points, newPoint] };
+            needsServerSave = true;
           } else {
             needsServerSave = true;
             currentDayKey = todayKey;

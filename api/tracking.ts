@@ -12,7 +12,7 @@
  * The integration auto-sets fawzztv_KV_REST_API_URL and fawzztv_KV_REST_API_TOKEN.
  */
 
-import { Redis } from '@upstash/redis';
+import { getRedis } from './lib/redis';
 
 const KV_KEY = 'subabike-tracking';
 
@@ -29,13 +29,6 @@ interface TrackingData {
 
 function empty(): TrackingData {
   return { steps: [], currentDayKey: null, lastPersistTime: null };
-}
-
-function getRedis(): Redis | null {
-  const url = process.env.fawzztv_KV_REST_API_URL;
-  const token = process.env.fawzztv_KV_REST_API_TOKEN;
-  if (!url || !token) return null;
-  return new Redis({ url, token });
 }
 
 // GET → load tracking data

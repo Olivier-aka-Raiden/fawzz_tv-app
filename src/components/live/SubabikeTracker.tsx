@@ -2,7 +2,7 @@ import { useRef, useCallback, useState, useEffect, type PointerEvent as RPointer
 import Map, { Source, Layer, Marker, type MapRef } from 'react-map-gl/mapbox';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
-import { MapPin, ChevronRight, ChevronLeft, Wifi, WifiOff } from 'lucide-react';
+import { MapPin, ChevronRight, ChevronLeft, Wifi, WifiOff, AlertTriangle } from 'lucide-react';
 import useSubabikeTracking from '../../hooks/useSubabikeTracking';
 import type { TrackPoint, SubabikeStep } from '../../data/subabike';
 
@@ -37,23 +37,20 @@ function pointsToGeoJSON(points: TrackPoint[]) {
 
 export default function SubabikeTracker() {
   const { t } = useTranslation();
-  const { tracking, currentLocation, connected } = useSubabikeTracking();
+  const { tracking, currentLocation, connected, configured, error, loaded } = useSubabikeTracking();
   const mapRef = useRef<MapRef>(null);
   const sliderRef = useRef<HTMLDivElement>(null);
 
   const steps = tracking.steps;
   const totalSteps = steps.length;
 
-  // NaN guard for current location
-  const safeLocation = currentLocation &&
-    Number.isFinite(currentLocation.lng) &&
-    Number.isFinite(currentLocation.lat)
-    ? currentLocation
-    : null;
-
-  // Selected step range
+  // Selected step range — with refs to avoid stale closure during drag
   const [startIdx, setStartIdx] = useState(0);
   const [endIdx, setEndIdx] = useState(Math.max(0, totalSteps - 1));
+  const startIdxRef = useRef(startIdx);
+  const endIdxRef = useRef(endIdx);
+  startIdxRef.current = startIdx;
+  endIdxRef.current = endIdx;
   const [dragging, setDragging] = useState<'start' | 'end' | null>(null);
   const [collapsed, setCollapsed] = useState(false);
 
@@ -95,13 +92,13 @@ export default function SubabikeTracker() {
 
   // Fly to current location on change
   useEffect(() => {
-    if (!safeLocation || !mapRef.current) return;
+    if (!currentLocation || !mapRef.current) return;
     mapRef.current.flyTo({
-      center: [safeLocation.lng, safeLocation.lat],
+      center: [currentLocation.lng, currentLocation.lat],
       duration: 2000,
       zoom: mapRef.current.getZoom(),
     });
-  }, [safeLocation]);
+  }, [currentLocation]);
 
   // Slider helpers
   const sliderPercent = (idx: number) => totalSteps <= 1 ? 50 : (idx / (totalSteps - 1)) * 100;
@@ -124,13 +121,13 @@ export default function SubabikeTracker() {
     const handleMove = (e: globalThis.PointerEvent) => {
       const idx = getIndexFromClientX(e.clientX);
       if (dragging === 'start') {
-        const newStart = Math.min(idx, endIdx);
+        const newStart = Math.min(idx, endIdxRef.current);
         setStartIdx(newStart);
-        fitToSteps(newStart, endIdx);
+        fitToSteps(newStart, endIdxRef.current);
       } else {
-        const newEnd = Math.max(idx, startIdx);
+        const newEnd = Math.max(idx, startIdxRef.current);
         setEndIdx(newEnd);
-        fitToSteps(startIdx, newEnd);
+        fitToSteps(startIdxRef.current, newEnd);
       }
     };
     const handleUp = () => setDragging(null);
@@ -140,7 +137,9 @@ export default function SubabikeTracker() {
       window.removeEventListener('pointermove', handleMove);
       window.removeEventListener('pointerup', handleUp);
     };
-  }, [dragging, startIdx, endIdx, getIndexFromClientX, fitToSteps]);
+    // Intentionally exclude startIdx/endIdx from deps — refs provide current values
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dragging, getIndexFromClientX, fitToSteps]);
 
   // Build GeoJSON with NaN filtering
   const selectedPoints = steps.slice(startIdx, endIdx + 1).flatMap(s => s.points);
@@ -156,8 +155,8 @@ export default function SubabikeTracker() {
   const numDays = endIdx - startIdx + 1;
 
   // Safe default center
-  const defaultCenter: [number, number] = safeLocation
-    ? [safeLocation.lng, safeLocation.lat]
+  const defaultCenter: [number, number] = currentLocation
+    ? [currentLocation.lng, currentLocation.lat]
     : [6.8333, 47.5167];
 
   // Validate token presence
@@ -186,8 +185,13 @@ export default function SubabikeTracker() {
           </h3>
           <span className={`flex items-center gap-1 text-[10px] ${connected ? 'text-green-400' : 'text-gray-600'}`}>
             {connected ? <Wifi size={10} /> : <WifiOff size={10} />}
-            {connected ? 'Live' : 'Waiting'}
+            {connected ? t('subabike.live', 'Live') : t('subabike.waiting', 'Waiting')}
           </span>
+          {error && (
+            <span className="flex items-center gap-1 text-[10px] text-yellow-500" title={error}>
+              <AlertTriangle size={10} />
+            </span>
+          )}
         </div>
         <button
           onClick={() => setCollapsed(!collapsed)}
@@ -235,7 +239,7 @@ export default function SubabikeTracker() {
               </Source>
             )}
 
-            {/* Day markers — with NaN guard */}
+            {/* Day markers */}
             {steps.map((step: SubabikeStep, i: number) => {
               const clean = validPoints(step.points);
               if (clean.length === 0) return null;
@@ -282,8 +286,8 @@ export default function SubabikeTracker() {
             })}
 
             {/* Live position dot — only when actively receiving fresh location data */}
-            {connected && safeLocation && (
-              <Marker longitude={safeLocation.lng} latitude={safeLocation.lat} anchor="center">
+            {connected && currentLocation && (
+              <Marker longitude={currentLocation.lng} latitude={currentLocation.lat} anchor="center">
                 <div className="relative">
                   <div className="w-5 h-5 rounded-full bg-red-500 border-2 border-white shadow-lg animate-pulse"
                     style={{ boxShadow: '0 0 16px rgba(239, 68, 68, 0.7), 0 0 32px rgba(239, 68, 68, 0.3)' }}
@@ -294,14 +298,24 @@ export default function SubabikeTracker() {
           </Map>
 
           {/* Empty overlay */}
-          {totalSteps === 0 && (
+          {!loaded && (
+            <div className="absolute inset-0 flex items-center justify-center bg-gray-950/60 pointer-events-none">
+              <div className="text-center">
+                <MapPin size={32} className="text-gray-600 mx-auto mb-2" />
+                <p className="text-sm text-gray-500">{t('subabike.connecting', 'Connecting…')}</p>
+              </div>
+            </div>
+          )}
+          {loaded && totalSteps === 0 && (
             <div className="absolute inset-0 flex items-center justify-center bg-gray-950/60 pointer-events-none">
               <div className="text-center">
                 <MapPin size={32} className="text-gray-600 mx-auto mb-2" />
                 <p className="text-sm text-gray-500">
-                  {connected
-                    ? t('subabike.waitingLocation', 'Waiting for GPS data...')
-                    : t('subabike.connecting', 'Connecting...')}
+                  {!configured
+                    ? t('subabike.noPullKey', 'Tracker not configured')
+                    : connected
+                      ? t('subabike.waitingLocation', 'Waiting for GPS data…')
+                      : t('subabike.connecting', 'Connecting…')}
                 </p>
               </div>
             </div>

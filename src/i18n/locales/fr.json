@@ -127,10 +127,10 @@
   "subabike": {
     "title": "Suivi SubaBike",
     "selected": "Sélectionné",
-    "stops": "étapes",
     "days": "jours",
     "day": "jour",
-    "fullRoute": "Parcours complet",
+    "live": "En direct",
+    "waiting": "En attente",
     "sliderHint": "Déplacez les poignées pour choisir votre segment",
     "waitingLocation": "En attente des données GPS…",
     "connecting": "Connexion en cours…",

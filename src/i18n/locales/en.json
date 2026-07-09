@@ -127,10 +127,10 @@
   "subabike": {
     "title": "SubaBike Tracker",
     "selected": "Selected",
-    "stops": "stops",
     "days": "days",
     "day": "day",
-    "fullRoute": "Full route",
+    "live": "Live",
+    "waiting": "Waiting",
     "sliderHint": "Drag the handles to choose your segment",
     "waitingLocation": "Waiting for GPS data…",
     "connecting": "Connecting…",

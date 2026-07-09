@@ -10,7 +10,8 @@
     <!-- PWA manifest -->
     <link rel="manifest" href="/manifest.json" />
 
-    <!-- PWA: iOS / Safari -->
+    <!-- PWA: force Referer header in standalone mode (required for Mapbox token restrictions) -->
+    <meta name="referrer" content="origin" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="apple-mobile-web-app-title" content="FAWZZ_TV" />

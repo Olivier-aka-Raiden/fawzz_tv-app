@@ -10,7 +10,8 @@
   "home": {
     "hero": {
       "tagline": "Interactive cycling adventures on Twitch — authenticity, community, and ambitious challenges.",
-      "cta": "Watch on Twitch"
+      "ctaLive": "Watch the live",
+      "ctaClips": "Watch the highlights"
     },
     "stats": {
       "adventures": "Adventures",

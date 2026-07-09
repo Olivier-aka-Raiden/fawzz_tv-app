@@ -125,7 +125,7 @@ async function saveToServer(data: TrackingData): Promise<boolean> {
   return false;
 }
 
-async function fetchCurrentLocation(): Promise<{ lng: number; lat: number } | null> {
+async function fetchCurrentLocation(): Promise<{ lng: number; lat: number; stale: boolean } | null> {
   try {
     const res = await fetch('/api/location');
     if (!res.ok) return null;
@@ -140,7 +140,7 @@ async function fetchCurrentLocation(): Promise<{ lng: number; lat: number } | nu
       data.latitude >= -90 && data.latitude <= 90 &&
       data.longitude >= -180 && data.longitude <= 180
     ) {
-      return { lng: data.longitude, lat: data.latitude };
+      return { lng: data.longitude, lat: data.latitude, stale: data.stale === true };
     }
     if (data?.error) {
       console.warn('[SubaBike Hook] ⚠️ API error:', data.error);
@@ -207,13 +207,23 @@ export default function useSubabikeTracking() {
       if (loc) {
         consecutiveFailures = 0;
 
+        if (loc.stale) {
+          // Location unchanged for > 11 min — app stopped sending new data
+          if (prevConnected.current) {
+            console.warn('[SubaBike Hook] 🕐 Location stale — treating as disconnected');
+            prevConnected.current = false;
+            setConnected(false);
+          }
+          return;
+        }
+
         // Dedup: only update state if location changed meaningfully
         const newKey = `${loc.lat.toFixed(6)},${loc.lng.toFixed(6)}`;
         const changed = newKey !== prevLocKey.current;
         prevLocKey.current = newKey;
 
         if (changed || !prevConnected.current) {
-          setCurrentLocation(loc);
+          setCurrentLocation({ lng: loc.lng, lat: loc.lat });
           setConnected(true);
           prevConnected.current = true;
         }

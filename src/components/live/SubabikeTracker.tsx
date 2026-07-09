@@ -281,8 +281,8 @@ export default function SubabikeTracker() {
               );
             })}
 
-            {/* Live position dot */}
-            {safeLocation && (
+            {/* Live position dot — only when actively receiving fresh location data */}
+            {connected && safeLocation && (
               <Marker longitude={safeLocation.lng} latitude={safeLocation.lat} anchor="center">
                 <div className="relative">
                   <div className="w-5 h-5 rounded-full bg-red-500 border-2 border-white shadow-lg animate-pulse"

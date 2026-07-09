@@ -12,7 +12,17 @@
  * The integration auto-sets fawzztv_KV_REST_API_URL and fawzztv_KV_REST_API_TOKEN.
  */
 
-import { getRedis } from './lib/redis';
+import { Redis } from '@upstash/redis';
+
+// Inline Redis client (Vercel doesn't deploy api/lib/ subdirectories)
+let _redis: Redis | null | undefined;
+function getRedis(): Redis | null {
+  if (_redis !== undefined) return _redis;
+  const url = process.env.fawzztv_KV_REST_API_URL;
+  const token = process.env.fawzztv_KV_REST_API_TOKEN;
+  _redis = url && token ? new Redis({ url, token }) : null;
+  return _redis;
+}
 
 const KV_KEY = 'subabike-tracking';
 

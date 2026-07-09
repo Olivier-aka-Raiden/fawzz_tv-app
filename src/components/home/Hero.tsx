@@ -1,9 +1,12 @@
 import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router';
 import { motion } from 'framer-motion';
-import { ExternalLink, ArrowDown } from 'lucide-react';
+import { Tv, Play, ArrowDown } from 'lucide-react';
+import { useTwitchLive } from '../../hooks/useTwitchLive';
 
 export default function Hero() {
   const { t } = useTranslation();
+  const isLive = useTwitchLive();
 
   return (
     <section className="relative min-h-[calc(100vh-4rem)] flex items-center justify-center overflow-hidden">
@@ -27,7 +30,7 @@ export default function Hero() {
           </div>
         </motion.div>
 
-        {/* Brand name — the main attraction */}
+        {/* Brand name */}
         <motion.h1
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
@@ -47,21 +50,39 @@ export default function Hero() {
           {t('home.hero.tagline')}
         </motion.p>
 
-        {/* CTA */}
+        {/* CTA — conditional: live → /live, offline → /clips */}
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.7 }}
+          className="flex flex-col sm:flex-row items-center justify-center gap-4"
         >
-          <a
-            href="https://twitch.tv/fawzz_tv"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 px-8 py-4 bg-twitch hover:bg-twitch-glow text-white font-semibold rounded-xl transition-all hover:scale-105 shadow-lg shadow-twitch/25"
-          >
-            <ExternalLink size={20} />
-            {t('home.hero.cta')}
-          </a>
+          {isLive ? (
+            <Link
+              to="/live"
+              className="group relative inline-flex items-center gap-3 px-10 py-4 bg-red-600 hover:bg-red-500 text-white font-bold rounded-2xl transition-all duration-300 hover:scale-105 shadow-xl shadow-red-600/30 hover:shadow-red-500/40 overflow-hidden"
+            >
+              {/* Subtle animated background shimmer */}
+              <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
+              {/* Live pulsar dot */}
+              <span className="relative flex h-3 w-3">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75" />
+                <span className="relative inline-flex rounded-full h-3 w-3 bg-white" />
+              </span>
+              <span className="relative">{t('home.hero.ctaLive')}</span>
+              <Tv size={18} className="relative" />
+            </Link>
+          ) : (
+            <Link
+              to="/clips"
+              className="group relative inline-flex items-center gap-3 px-10 py-4 bg-twitch hover:bg-twitch-glow text-white font-bold rounded-2xl transition-all duration-300 hover:scale-105 shadow-xl shadow-twitch/25 hover:shadow-twitch/40 overflow-hidden"
+            >
+              {/* Subtle animated background shimmer */}
+              <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
+              <Play size={18} className="relative" />
+              <span className="relative">{t('home.hero.ctaClips')}</span>
+            </Link>
+          )}
         </motion.div>
 
         {/* Scroll indicator */}

@@ -98,13 +98,13 @@ export default function useSubabikeTracking() {
     saveToStorage(tracking);
   }, [tracking]);
 
-  // Debounced server persistence
+  // Debounced server persistence — reads latest data from ref, not captured args
   const lastServerSave = useRef(0);
-  const saveToServerDebounced = useCallback((data: TrackingData) => {
+  const saveToServerDebounced = useCallback(() => {
     const now = Date.now();
     if (now - lastServerSave.current < 30_000) return;
     lastServerSave.current = now;
-    saveToServer(data);
+    saveToServer(trackingRef.current);
   }, []);
 
   // State dedup ref — avoid setting same state repeatedly
@@ -180,12 +180,14 @@ export default function useSubabikeTracking() {
             steps.push(newStep);
 
             reverseGeocode(lng, lat).then(name => {
-              setTracking((p: TrackingData) => ({
-                ...p,
-                steps: p.steps.map((s: SubabikeStep) =>
+              setTracking((p: TrackingData) => {
+                const updatedSteps = p.steps.map((s: SubabikeStep) =>
                   s.id === newStep.id ? { ...s, name } : s
-                ),
-              }));
+                );
+                const updated = { ...p, steps: updatedSteps };
+                saveToServer(updated); // persist resolved name to server immediately
+                return updated;
+              });
             });
           } else if (lastStep) {
             steps[steps.length - 1] = { ...lastStep, points: [...lastStep.points, newPoint] };
@@ -203,17 +205,19 @@ export default function useSubabikeTracking() {
             steps.push(firstStep);
 
             reverseGeocode(lng, lat).then(name => {
-              setTracking((p: TrackingData) => ({
-                ...p,
-                steps: p.steps.map((s: SubabikeStep) =>
+              setTracking((p: TrackingData) => {
+                const updatedSteps = p.steps.map((s: SubabikeStep) =>
                   s.id === firstStep.id ? { ...s, name } : s
-                ),
-              }));
+                );
+                const updated = { ...p, steps: updatedSteps };
+                saveToServer(updated); // persist resolved name to server immediately
+                return updated;
+              });
             });
           }
 
           const result: TrackingData = { steps, currentDayKey, lastPersistTime: now };
-          if (needsServerSave) saveToServerDebounced(result);
+          if (needsServerSave) saveToServerDebounced();
           return result;
         });
       } else {

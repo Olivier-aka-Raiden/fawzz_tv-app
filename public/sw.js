@@ -9,6 +9,9 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
-  // Pass-through: don't cache, just proxy the network request
-  event.respondWith(fetch(event.request));
+  // Only intercept same-origin requests — let cross-origin (Mapbox, etc.) pass through natively.
+  // The SW still satisfies Chrome's beforeinstallprompt requirement just by being registered.
+  if (event.request.url.startsWith(self.location.origin)) {
+    event.respondWith(fetch(event.request));
+  }
 });

@@ -44,7 +44,7 @@ export default function SubabikeTracker() {
   const steps = tracking.steps;
   const totalSteps = steps.length;
 
-  // Selected step range — with refs to avoid stale closure during drag
+  // Selected step range — min 2-day window, refs avoid stale closure during drag
   const [startIdx, setStartIdx] = useState(0);
   const [endIdx, setEndIdx] = useState(Math.max(0, totalSteps - 1));
   const startIdxRef = useRef(startIdx);
@@ -121,11 +121,13 @@ export default function SubabikeTracker() {
     const handleMove = (e: globalThis.PointerEvent) => {
       const idx = getIndexFromClientX(e.clientX);
       if (dragging === 'start') {
-        const newStart = Math.min(idx, endIdxRef.current);
+        // Min 2-day window: start can't pass (end - 1)
+        const newStart = Math.min(idx, endIdxRef.current - 1);
         setStartIdx(newStart);
         fitToSteps(newStart, endIdxRef.current);
       } else {
-        const newEnd = Math.max(idx, startIdxRef.current);
+        // Min 2-day window: end can't pass (start + 1)
+        const newEnd = Math.max(idx, startIdxRef.current + 1);
         setEndIdx(newEnd);
         fitToSteps(startIdxRef.current, newEnd);
       }
